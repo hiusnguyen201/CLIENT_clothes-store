@@ -20,6 +20,9 @@ import {
   ResetPasswordUserPayload,
   ResetPasswordUserResponse,
   ExportListUserExcelResponse,
+  ImportListUserPayload,
+  TestImportListUserResponse,
+  LiveImportListUserResponse,
 } from "@/redux/user/user.type";
 
 export const checkEmailExistService = async (payload: CheckEmailExistPayload): Promise<CheckEmailExistResponse> => {
@@ -38,6 +41,18 @@ export const exportListUserExcelService = async (payload: GetListUserPayload): P
   return await apiInstance.get(`/users/export-excel?${convertToSearchParams(payload)}`, {
     responseType: "blob",
   });
+};
+
+export const testImportListUserExcelService = async (
+  payload: ImportListUserPayload
+): Promise<TestImportListUserResponse> => {
+  return await apiInstance.post(`/users/test-import`, payload);
+};
+
+export const liveImportListUserExcelService = async (
+  payload: ImportListUserPayload
+): Promise<LiveImportListUserResponse> => {
+  return await apiInstance.post(`/users/live-import`, payload);
 };
 
 export const getUserService = async (payload: GetUserPayload): Promise<GetUserResponse> => {

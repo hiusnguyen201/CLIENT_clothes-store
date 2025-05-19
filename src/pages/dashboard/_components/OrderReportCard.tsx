@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { MetricsCard } from "./MetricsCard";
+import { MetricsCard, MetricsCardSkeleton } from "./MetricsCard";
 import { ReportState } from "@/redux/report/report.type";
 import { useEffect } from "react";
 import { getOrderReport } from "@/redux/report/report.thunk";
@@ -18,7 +18,7 @@ export function OrderReportCard({ compareTo }: { compareTo: COMPARISON_VALUES })
   }, [compareTo]);
 
   if (!orderReport || loading.getOrderReport) {
-    return <div className="rounded-xl bg-muted/50" />;
+    return <MetricsCardSkeleton />;
   }
 
   return (

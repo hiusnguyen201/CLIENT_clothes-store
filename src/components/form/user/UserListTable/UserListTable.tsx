@@ -11,6 +11,9 @@ import { ExportListUserExcelButton } from "@/components/form/user/ExportListUser
 import { useUserTableFilters } from "./useUserTableFilters";
 import { userColumns } from "./user-columns";
 import { UserFilterSidebarForm } from "./UserFilterSidebarForm";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Import } from "lucide-react";
 
 export function UserListTable() {
   const dispatch = useAppDispatch();
@@ -52,7 +55,13 @@ export function UserListTable() {
         />
       </div>
 
-      <div className="flex items-center sm:justify-end">
+      <div className="flex items-center sm:justify-end gap-3">
+        <Link to={"/users/import"}>
+          <Button className="min-w-[100px] sm:max-w-[120px]" variant="outline">
+            <Import />
+            Import
+          </Button>
+        </Link>
         <ExportListUserExcelButton filters={filters} />
       </div>
 

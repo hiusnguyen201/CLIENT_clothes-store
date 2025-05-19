@@ -12,7 +12,7 @@ export const SideBar = forwardRef(
 
     return (
       <Sidebar ref={ref} collapsible="icon" className={cn(className)}>
-        <SidebarContent className="py-6 px-4 overflow-x-hidden bg-white">
+        <SidebarContent className="border-y py-6 px-4 overflow-x-hidden bg-white">
           <NavMain items={navData.navMainGroupApp} />
           {/* <NavProjects projects={navData.projects} /> */}
         </SidebarContent>
@@ -20,7 +20,7 @@ export const SideBar = forwardRef(
         <SidebarFooter className="p-0 bg-white flex items-center justify-center">
           <Button
             variant="ghost"
-            className="border-t p-4 w-full h-auto justify-end [&_svg]:size-5"
+            className="p-4 w-full h-auto justify-end [&_svg]:size-5"
             onClick={() => setOpen(!open)}
           >
             <span className="w-8 h-8 flex items-center justify-center">

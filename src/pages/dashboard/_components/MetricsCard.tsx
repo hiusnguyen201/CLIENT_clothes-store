@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { COMPARISON_VALUES } from "@/types/report";
-import { ArrowUpRight, TrendingDown, TrendingUp } from "lucide-react";
+import { TrendingDown, TrendingUp } from "lucide-react";
 
 interface MetricsCardProps {
   title: string;
@@ -32,7 +33,7 @@ const getCompareText = (unit: COMPARISON_VALUES) => {
 
 export function MetricsCard({ title, value, change, chart }: MetricsCardProps) {
   return (
-    <Card className="p-4 bg-background/50 backdrop-blur">
+    <Card className="p-4 bg-background/50 backdrop-blur h-[150px]">
       <div className="flex items-center justify-between mb-4 text-sm text-muted-foreground">
         <h3>{title}</h3>
         {chart}
@@ -48,6 +49,24 @@ export function MetricsCard({ title, value, change, chart }: MetricsCardProps) {
             {change.isPositive ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
             {change.percentage}
           </span>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+export function MetricsCardSkeleton() {
+  return (
+    <Card className="p-4 bg-background/50 backdrop-blur h-[150px]">
+      <div className="flex items-center justify-between mb-4 text-sm text-muted-foreground">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-6 w-20 rounded-md" />
+      </div>
+      <div className="flex items-end justify-between">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-4 w-20" />
         </div>
       </div>
     </Card>

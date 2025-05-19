@@ -25,6 +25,7 @@ import { PERMISSIONS } from "@/constants/permissions";
 import { ForbiddenPage } from "@/pages/errors/ForbiddenPage";
 import { CreateUserPage } from "@/pages/users/CreateUserPage";
 import { ListNotificationPage } from "@/pages/notifications/ListNotificationPage";
+import { ImportUserPage } from "@/pages/users/ImportUserPage";
 
 export const privateRoutes: RouteObject[] = [
   {
@@ -114,6 +115,10 @@ export const privateRoutes: RouteObject[] = [
             <ListUserPage />
           </PermissionGuard>
         ),
+      },
+      {
+        path: "/users/import",
+        element: <ImportUserPage />,
       },
       {
         path: "/users/create",

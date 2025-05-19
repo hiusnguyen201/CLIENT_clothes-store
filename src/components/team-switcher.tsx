@@ -1,10 +1,5 @@
 import * as React from "react";
-import { ChevronsUpDown } from "lucide-react";
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
 
 export function TeamSwitcher({
@@ -13,7 +8,7 @@ export function TeamSwitcher({
   team: {
     name: string;
     logo: React.ElementType;
-    plan: string;
+    plan?: string;
     url: string;
   };
 }) {
@@ -23,15 +18,17 @@ export function TeamSwitcher({
         <Link to={team.url}>
           <SidebarMenuButton
             size="lg"
-            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            className="p-6 h-14 border-b data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
-            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              <team.logo className="size-4" />
-            </div>
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-semibold">{team.name}</span>
-              <span className="truncate text-xs">{team.plan}</span>
-            </div>
+            <h1 className="flex items-center gap-3 font-bold w-full text-2xl">
+              <span className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <team.logo className="size-5" />
+              </span>
+              <span className="grid flex-1 text-left leading-tight">
+                <span className="truncate font-semibold">{team.name}</span>
+                {team.plan && <span className="truncate text-xs">{team.plan}</span>}
+              </span>
+            </h1>
           </SidebarMenuButton>
         </Link>
       </SidebarMenuItem>

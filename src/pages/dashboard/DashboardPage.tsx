@@ -9,9 +9,13 @@ import { useState } from "react";
 import { COMPARISON_VALUES } from "@/types/report";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RecentOrderListTable } from "@/components/form/order/OrderListTable/RecentOrderListTable";
+import { useAppSelector } from "@/redux/store";
+import { ReportState } from "@/redux/report/report.type";
+import { Spinner } from "@/components/spinner";
 
 export function DashboardPage() {
   const [compareTo, setCompareTo] = useState<COMPARISON_VALUES>(COMPARISON_VALUES.YESTERDAY);
+  const { loading } = useAppSelector<ReportState>((selector) => selector.report);
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-5">
@@ -21,6 +25,10 @@ export function DashboardPage() {
           <div className="text-sm text-muted-foreground">{moment().tz("Asia/Ho_Chi_Minh").format("MMM D, YYYY")}</div>
         </div>
         <div className="flex items-center gap-1 text-sm min-w-[130px]">
+          <Spinner
+            className="size-5"
+            show={loading.getOrderReport || loading.getCustomerReport || loading.getRevenueReport}
+          />
           <SelectFormField
             name="compareTo"
             value={compareTo}

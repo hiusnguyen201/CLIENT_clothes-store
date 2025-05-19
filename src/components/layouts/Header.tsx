@@ -1,19 +1,24 @@
 import { Link } from "react-router-dom";
-import { BringToFront } from "lucide-react";
 import { NavUser } from "@/components/layouts/NavUser";
 import { useAuth } from "@/hooks/use-auth";
 import { BusinessNotification } from "@/components/layouts/BusinessNotification";
+import { useSidebar } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
 export function Header() {
   const { user } = useAuth();
+  const { open } = useSidebar();
   return (
-    <header className="bg-black z-[50] left-0 right-0 fixed top-0 w-full px-2 flex h-14 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear">
-      <div className="flex items-center">
-        <Link to={"/"} className="flex h-12 items-center gap-2 text-white px-6">
-          <BringToFront className="h-6 w-6" />
-          <span className="font-bold">Fashion</span>
-        </Link>
-      </div>
+    <header className="bg-black z-[50] left-0 right-0 fixed top-0 w-full px-2 flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear">
+      <Link
+        to={"/dashboard"}
+        className={cn(
+          "group-data-[collapsible=icon]:px-2 object-contain h-full -ml-2",
+          open ? "w-[var(--sidebar-width)]" : "w-[var(--sidebar-width-icon)]"
+        )}
+      >
+        <img src={open ? "/assets/logo3.svg" : "/assets/logo4.svg"} alt="logo" className="h-full w-full p-2" />
+      </Link>
 
       {user && (
         <div className="flex items-center gap-3">

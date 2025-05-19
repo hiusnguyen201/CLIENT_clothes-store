@@ -8,8 +8,10 @@ import {
   getListUserPermissionsService,
   getListUserService,
   getUserService,
+  liveImportListUserExcelService,
   removeUserService,
   resetPasswordUserService,
+  testImportListUserExcelService,
 } from "@/redux/user/user.service";
 import {
   CheckEmailExistPayload,
@@ -27,10 +29,13 @@ import {
   GetListUserResponse,
   GetUserPayload,
   GetUserResponse,
+  ImportListUserPayload,
+  LiveImportListUserResponse,
   RemoveUserPayload,
   RemoveUserResponse,
   ResetPasswordUserPayload,
   ResetPasswordUserResponse,
+  TestImportListUserResponse,
 } from "@/redux/user/user.type";
 import { ThunkApiConfig } from "@/types/thunk-api";
 import { downloadFileBlob } from "@/utils/object";
@@ -50,9 +55,9 @@ export const createUser = createAsyncThunk<CreateUserResponse, CreateUserPayload
 
 export const getListUser = createAsyncThunk<GetListUserResponse, GetListUserPayload, ThunkApiConfig>(
   "user/get-list-user",
-  async (filters, { rejectWithValue }) => {
+  async (payload, { rejectWithValue }) => {
     try {
-      const response: GetListUserResponse = await getListUserService(filters);
+      const response: GetListUserResponse = await getListUserService(payload);
       return response;
     } catch (e: any) {
       const message: string = e?.response?.data?.message || e.message || e.toString();
@@ -63,10 +68,36 @@ export const getListUser = createAsyncThunk<GetListUserResponse, GetListUserPayl
 
 export const exportListUserExcel = createAsyncThunk<void, GetListUserPayload, ThunkApiConfig>(
   "user/export-list-user-excel",
-  async (filters, { rejectWithValue }) => {
+  async (payload, { rejectWithValue }) => {
     try {
-      const data: ExportListUserExcelResponse = await exportListUserExcelService(filters);
+      const data: ExportListUserExcelResponse = await exportListUserExcelService(payload);
       downloadFileBlob(data, "users-list.xlsx");
+    } catch (e: any) {
+      const message: string = e?.response?.data?.message || e.message || e.toString();
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const testImportListUser = createAsyncThunk<TestImportListUserResponse, ImportListUserPayload, ThunkApiConfig>(
+  "user/test-import-list-user",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response: TestImportListUserResponse = await testImportListUserExcelService(payload);
+      return response;
+    } catch (e: any) {
+      const message: string = e?.response?.data?.message || e.message || e.toString();
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const liveImportListUser = createAsyncThunk<LiveImportListUserResponse, ImportListUserPayload, ThunkApiConfig>(
+  "user/live-import-list-user",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response: LiveImportListUserResponse = await liveImportListUserExcelService(payload);
+      return response;
     } catch (e: any) {
       const message: string = e?.response?.data?.message || e.message || e.toString();
       return rejectWithValue(message);

@@ -18,6 +18,8 @@ export interface UserState {
     editListUserPermissions: boolean;
     resetPasswordUser: boolean;
     exportListUserExcel: boolean;
+    testImportListUser: boolean;
+    liveImportListUser: boolean;
   };
   newItem: Nullable<User>;
   item: Nullable<User>;
@@ -27,7 +29,17 @@ export interface UserState {
   error: Nullable<string>;
   listUserPermissions: Permission[];
   removedUserIds: string[];
+  summaryTestImport: {
+    totalRows: number;
+    validRows: number;
+    invalidRows: number;
+  };
+  recordsImported: number;
+  errorsTestImport: ImportError[];
+  errorsLiveImport: ImportError[];
 }
+
+export type ImportError = { row: number; field: string; message: string };
 
 /**
  * Create User
@@ -64,6 +76,33 @@ export interface GetUserPayload {
   id: string;
 }
 export interface GetUserResponse extends BaseResponse<User> {}
+
+/**
+ *  Import List User
+ */
+export type ImportUserPayload = {
+  name: string;
+  email: string;
+  phone: string;
+  gender: GENDER | string;
+};
+export interface ImportListUserPayload {
+  users: ImportUserPayload[];
+}
+export interface TestImportListUserDataResponse {
+  summary: {
+    totalRows: number;
+    validRows: number;
+    invalidRows: number;
+  };
+  errors: ImportError[];
+}
+export interface TestImportListUserResponse extends BaseResponse<TestImportListUserDataResponse> {}
+export interface LiveImportListUserDataResponse {
+  recordsImported: number;
+  errors: ImportError[];
+}
+export interface LiveImportListUserResponse extends BaseResponse<LiveImportListUserDataResponse> {}
 
 /**
  * Edit User

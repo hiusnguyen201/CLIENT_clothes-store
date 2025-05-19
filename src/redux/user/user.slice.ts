@@ -5,7 +5,9 @@ import {
   GetListUserPermissionsResponse,
   GetListUserResponse,
   GetUserResponse,
+  LiveImportListUserResponse,
   RemoveUserResponse,
+  TestImportListUserResponse,
   UserState,
 } from "@/redux/user/user.type";
 import {
@@ -19,6 +21,8 @@ import {
   checkEmailExist,
   resetPasswordUser,
   exportListUserExcel,
+  testImportListUser,
+  liveImportListUser,
 } from "@/redux/user/user.thunk";
 
 const initialState: UserState = {
@@ -33,6 +37,8 @@ const initialState: UserState = {
     editListUserPermissions: false,
     resetPasswordUser: false,
     exportListUserExcel: false,
+    liveImportListUser: false,
+    testImportListUser: false,
   },
   newItem: null,
   item: null,
@@ -42,6 +48,14 @@ const initialState: UserState = {
   error: null,
   listUserPermissions: [],
   removedUserIds: [],
+  summaryTestImport: {
+    totalRows: 0,
+    validRows: 0,
+    invalidRows: 0,
+  },
+  errorsTestImport: [],
+  errorsLiveImport: [],
+  recordsImported: 0,
 };
 
 const userSlice = createSlice({
@@ -117,6 +131,56 @@ const userSlice = createSlice({
       .addCase(exportListUserExcel.rejected, (state: Draft<UserState>, action: PayloadAction<any>) => {
         state.loading.exportListUserExcel = false;
         state.error = action.payload as string;
+      });
+
+    builder
+      // Test Import List User
+      .addCase(testImportListUser.pending, (state: Draft<UserState>) => {
+        state.loading.testImportListUser = true;
+        state.error = null;
+      })
+      .addCase(
+        testImportListUser.fulfilled,
+        (state: Draft<UserState>, action: PayloadAction<TestImportListUserResponse>) => {
+          const { data } = action.payload;
+          state.loading.testImportListUser = false;
+          state.error = null;
+          state.errorsTestImport = data.errors;
+          state.summaryTestImport = data.summary;
+        }
+      )
+      .addCase(testImportListUser.rejected, (state: Draft<UserState>, action: PayloadAction<any>) => {
+        state.loading.testImportListUser = false;
+        state.error = action.payload as string;
+        state.errorsTestImport = [];
+        state.summaryTestImport = {
+          invalidRows: 0,
+          totalRows: 0,
+          validRows: 0,
+        };
+      });
+
+    builder
+      // Live Import List User
+      .addCase(liveImportListUser.pending, (state: Draft<UserState>) => {
+        state.loading.liveImportListUser = true;
+        state.error = null;
+      })
+      .addCase(
+        liveImportListUser.fulfilled,
+        (state: Draft<UserState>, action: PayloadAction<LiveImportListUserResponse>) => {
+          const { data } = action.payload;
+          state.loading.liveImportListUser = false;
+          state.error = null;
+          state.errorsLiveImport = data.errors;
+          state.recordsImported = data.recordsImported;
+        }
+      )
+      .addCase(liveImportListUser.rejected, (state: Draft<UserState>, action: PayloadAction<any>) => {
+        state.loading.testImportListUser = false;
+        state.error = action.payload as string;
+        state.errorsLiveImport = [];
+        state.recordsImported = 0;
       });
 
     builder
@@ -224,5 +288,7 @@ const userSlice = createSlice({
       });
   },
 });
+
+export const { resetLiveImport, resetTestImport } = userSlice.actions;
 
 export default userSlice.reducer;

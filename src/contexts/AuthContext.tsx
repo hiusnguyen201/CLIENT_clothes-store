@@ -153,6 +153,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     initialize();
+
+    const interval = setInterval(() => {
+      initialize();
+    }, 5 * 60 * 5000); // 1000 = 1s. Current 5 minutes
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   const loginAction = async (values: LoginPayload): Promise<LoginResponse> => {

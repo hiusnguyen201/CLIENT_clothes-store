@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { MetricsCard } from "./MetricsCard";
+import { MetricsCard, MetricsCardSkeleton } from "./MetricsCard";
 import { ReportState } from "@/redux/report/report.type";
 import { formatCurrencyVND } from "@/utils/string";
 import { useEffect } from "react";
@@ -16,10 +16,10 @@ export function RevenueReportCard({ compareTo }: { compareTo: COMPARISON_VALUES 
     (async () => {
       await dispatch(getRevenueReport({ compareTo })).unwrap();
     })();
-  }, []);
+  }, [compareTo]);
 
   if (!revenueReport || loading.getRevenueReport) {
-    return <div className="rounded-xl bg-muted/50" />;
+    return <MetricsCardSkeleton />;
   }
 
   return (

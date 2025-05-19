@@ -1,11 +1,11 @@
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { MetricsCard } from "./MetricsCard";
 import { ReportState } from "@/redux/report/report.type";
 import { useEffect } from "react";
 import { getCustomerReport } from "@/redux/report/report.thunk";
 import { Link } from "react-router-dom";
 import { COMPARISON_VALUES } from "@/types/report";
 import { Users } from "lucide-react";
+import { MetricsCard, MetricsCardSkeleton } from "./MetricsCard";
 
 export function CustomerReportCard({ compareTo }: { compareTo: COMPARISON_VALUES }) {
   const dispatch = useAppDispatch();
@@ -18,7 +18,7 @@ export function CustomerReportCard({ compareTo }: { compareTo: COMPARISON_VALUES
   }, [compareTo]);
 
   if (!customerReport || loading.getCustomerReport) {
-    return <div className="rounded-xl bg-muted/50" />;
+    return <MetricsCardSkeleton />;
   }
 
   return (

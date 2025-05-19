@@ -14,11 +14,11 @@ export function AdminLayout() {
         <Header />
 
         {/* Sidebar + content below the header */}
-        <div className="flex w-full pt-14 h-full">
+        <div className="flex w-full h-full">
           <SideBar className="h-full z-50" />
           {/* Main content on the right */}
           <SidebarInset className={cn(isMobile && "max-w-[calc(100%-var(--sidebar-width-icon))]")}>
-            <div>
+            <div className="pt-16">
               <Outlet />
             </div>
           </SidebarInset>
