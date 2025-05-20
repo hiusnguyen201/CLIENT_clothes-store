@@ -138,12 +138,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const initialize = async () => {
     try {
       const responseProfile = await appDispatch(getProfile()).unwrap();
-      const responsePermissions = await appDispatch(getPermissionsInUser()).unwrap();
-      const userInfo = responseProfile.data;
-      const permissions = responsePermissions.data;
+      let permissions: string[] = [];
+      if (responseProfile) {
+        const responsePermissions = await appDispatch(getPermissionsInUser()).unwrap();
+        permissions = responsePermissions.data || [];
+      }
       dispatch({
         type: "INITIALIZE",
-        payload: { ...state, isAuthenticated: true, user: userInfo, permissions: permissions },
+        payload: { ...state, isAuthenticated: true, user: responseProfile.data, permissions: permissions },
       });
     } catch (e: any) {
       // const message = e?.response?.data?.message || e.message || e.toString();
@@ -170,7 +172,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       let permissions: string[] = [];
       if (isAuthenticated) {
         const responsePermissions = await appDispatch(getPermissionsInUser()).unwrap();
-        permissions = responsePermissions.data;
+        permissions = responsePermissions.data || [];
       }
       dispatch({
         type: "LOGIN",
