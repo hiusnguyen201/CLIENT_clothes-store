@@ -5,16 +5,17 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { liveImportListUser, testImportListUser } from "@/redux/user/user.thunk";
 import { ImportUserPayload, UserState } from "@/redux/user/user.type";
 
-const databaseFields: DatabaseField[] = [
+const databaseFields: DatabaseField<ImportUserPayload>[] = [
   { name: "name", type: "text", constraints: { required: true } },
   { name: "email", type: "text", constraints: { required: true, unique: true } },
   { name: "phone", type: "text", constraints: { required: true } },
   { name: "gender", type: "text", constraints: { required: true } },
+  { name: "roleId", type: "text", constraints: { required: false } },
 ];
 
 export function ImportUserForm() {
   const dispatch = useAppDispatch();
-  const { errorsTestImport, summaryTestImport, errorsLiveImport, recordsImported } = useAppSelector<UserState>(
+  const { errorsTestImport, summaryTestImport, errorsLiveImport, recordsImported, loading } = useAppSelector<UserState>(
     (selector) => selector.user
   );
 
@@ -50,6 +51,8 @@ export function ImportUserForm() {
       databaseFields={databaseFields}
       onClickLiveImport={handleLiveImport}
       onClickTestImport={handleTestImport}
+      loadingLiveImport={loading.liveImportListUser}
+      loadingTestImport={loading.testImportListUser}
     />
   );
 }

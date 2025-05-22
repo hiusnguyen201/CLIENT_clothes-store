@@ -7,9 +7,11 @@ import {
   GetListRoleResponse,
   GetListUnassignedRolePermissionsResponse,
   GetRoleResponse,
+  LiveImportListRoleResponse,
   RemoveRolePermissionResponse,
   RemoveRoleResponse,
   RoleState,
+  TestImportListRoleResponse,
 } from "@/redux/role/role.type";
 import {
   getListRole,
@@ -23,6 +25,8 @@ import {
   addRolePermissions,
   getListUnassignedRolePermissions,
   exportListRoleExcel,
+  testImportListRole,
+  liveImportListRole,
 } from "@/redux/role/role.thunk";
 
 const initialState: RoleState = {
@@ -38,17 +42,25 @@ const initialState: RoleState = {
     addRolePermissions: false,
     removeRolePermission: false,
     exportListRoleExcel: false,
+    liveImportListRole: false,
+    testImportListRole: false,
   },
   newItem: null,
   item: null,
-  initializedListRolePermission: false,
-  initializedList: false,
   list: [],
   totalCount: 0,
   error: null,
   assignedRolePermissions: [],
   unassignedRolePermissions: [],
   removedRoleIds: [],
+  summaryTestImport: {
+    totalRows: 0,
+    validRows: 0,
+    invalidRows: 0,
+  },
+  errorsTestImport: [],
+  errorsLiveImport: [],
+  recordsImported: 0,
 };
 
 const roleSlice = createSlice({
@@ -101,14 +113,62 @@ const roleSlice = createSlice({
         state.error = null;
         state.list = data.list;
         state.totalCount = data.totalCount;
-        state.initializedList = true;
       })
       .addCase(getListRole.rejected, (state: Draft<RoleState>, action: PayloadAction<any>) => {
         state.loading.getListRole = false;
         state.error = action.payload as string;
         state.list = [];
         state.totalCount = 0;
-        state.initializedList = true;
+      });
+
+    builder
+      // Test Import List Role
+      .addCase(testImportListRole.pending, (state: Draft<RoleState>) => {
+        state.loading.testImportListRole = true;
+        state.error = null;
+      })
+      .addCase(
+        testImportListRole.fulfilled,
+        (state: Draft<RoleState>, action: PayloadAction<TestImportListRoleResponse>) => {
+          const { data } = action.payload;
+          state.loading.testImportListRole = false;
+          state.error = null;
+          state.errorsTestImport = data.errors;
+          state.summaryTestImport = data.summary;
+        }
+      )
+      .addCase(testImportListRole.rejected, (state: Draft<RoleState>, action: PayloadAction<any>) => {
+        state.loading.testImportListRole = false;
+        state.error = action.payload as string;
+        state.errorsTestImport = [];
+        state.summaryTestImport = {
+          invalidRows: 0,
+          totalRows: 0,
+          validRows: 0,
+        };
+      });
+
+    builder
+      // Live Import List Role
+      .addCase(liveImportListRole.pending, (state: Draft<RoleState>) => {
+        state.loading.liveImportListRole = true;
+        state.error = null;
+      })
+      .addCase(
+        liveImportListRole.fulfilled,
+        (state: Draft<RoleState>, action: PayloadAction<LiveImportListRoleResponse>) => {
+          const { data } = action.payload;
+          state.loading.liveImportListRole = false;
+          state.error = null;
+          state.errorsLiveImport = data.errors;
+          state.recordsImported = data.recordsImported;
+        }
+      )
+      .addCase(liveImportListRole.rejected, (state: Draft<RoleState>, action: PayloadAction<any>) => {
+        state.loading.liveImportListRole = false;
+        state.error = action.payload as string;
+        state.errorsLiveImport = [];
+        state.recordsImported = 0;
       });
 
     builder
@@ -192,14 +252,12 @@ const roleSlice = createSlice({
           state.loading.getListAssignedRolePermissions = false;
           state.error = null;
           state.assignedRolePermissions = data.list;
-          state.initializedListRolePermission = true;
         }
       )
       .addCase(getListAssignedRolePermissions.rejected, (state: Draft<RoleState>, action: PayloadAction<any>) => {
         state.loading.getListAssignedRolePermissions = false;
         state.error = action.payload as string;
         state.assignedRolePermissions = [];
-        state.initializedListRolePermission = true;
       });
 
     builder

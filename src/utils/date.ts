@@ -3,6 +3,7 @@ import moment from "moment";
 moment.locale("vi");
 
 export const formatDateString = (date: Date, type: "short" | "long" | "date" | "time" = "short") => {
+  if (!date) return "";
   switch (type) {
     case "short":
       return moment(date).format("DD/MM/YYYY");

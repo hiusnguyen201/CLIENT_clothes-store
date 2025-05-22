@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-
 import { getTypedParams, convertToSearchParams } from "@/utils/object";
 
 export function useSearchFilters<T extends object>({

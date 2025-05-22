@@ -1,4 +1,4 @@
-import { Nullable, Optional } from "@/types/common";
+import { ImportError, Nullable, Optional } from "@/types/common";
 import { BaseResponse, GetListParams, GetListResponseData } from "@/types/response";
 import { GENDER, Customer } from "@/types/customer";
 
@@ -13,14 +13,23 @@ export interface CustomerState {
     editCustomer: boolean;
     removeCustomer: boolean;
     exportListCustomerExcel: boolean;
+    testImportListCustomer: boolean;
+    liveImportListCustomer: boolean;
   };
   newItem: Nullable<Customer>;
   item: Nullable<Customer>;
   list: Customer[];
-  initializedList: boolean;
   totalCount: number;
   error: Nullable<string>;
   removedCustomerIds: string[];
+  summaryTestImport: {
+    totalRows: number;
+    validRows: number;
+    invalidRows: number;
+  };
+  recordsImported: number;
+  errorsTestImport: ImportError[];
+  errorsLiveImport: ImportError[];
 }
 
 /**
@@ -52,6 +61,33 @@ export interface GetListCustomerResponse extends GetListResponseData<Customer> {
  * Export List Customer To Excel
  */
 export interface ExportListCustomerExcelResponse extends Blob {}
+
+/**
+ *  Import List Customer
+ */
+export type ImportCustomerPayload = {
+  name: string;
+  email: string;
+  phone: string;
+  gender: GENDER | string;
+};
+export interface ImportListCustomerPayload {
+  customers: ImportCustomerPayload[];
+}
+export interface TestImportListCustomerDataResponse {
+  summary: {
+    totalRows: number;
+    validRows: number;
+    invalidRows: number;
+  };
+  errors: ImportError[];
+}
+export interface TestImportListCustomerResponse extends BaseResponse<TestImportListCustomerDataResponse> {}
+export interface LiveImportListCustomerDataResponse {
+  recordsImported: number;
+  errors: ImportError[];
+}
+export interface LiveImportListCustomerResponse extends BaseResponse<LiveImportListCustomerDataResponse> {}
 
 /**
  * Get Customer

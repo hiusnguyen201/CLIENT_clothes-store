@@ -1,4 +1,4 @@
-import { Nullable, Optional } from "@/types/common";
+import { ImportError, Nullable, Optional } from "@/types/common";
 import { BaseResponse, GetListParams, GetListResponseData } from "@/types/response";
 import { Product, PRODUCT_STATUS } from "@/types/product";
 
@@ -15,15 +15,58 @@ export interface ProductState {
     editProductVariants: boolean;
     removeProduct: boolean;
     exportListProductExcel: boolean;
+    testImportListProduct: boolean;
+    liveImportListProduct: boolean;
   };
   newItem: Nullable<Product>;
   item: Nullable<Product>;
   list: Product[];
-  initializedList: boolean;
   totalCount: number;
   error: Nullable<string>;
   removedProductIds: string[];
+  summaryTestImport: {
+    totalRows: number;
+    validRows: number;
+    invalidRows: number;
+  };
+  recordsImported: number;
+  errorsTestImport: ImportError[];
+  errorsLiveImport: ImportError[];
 }
+
+/**
+ *  Import List Product
+ */
+export type ImportProductPayload = {
+  thumbnail: string;
+  name: string;
+  description: string;
+  status: string;
+  category: string;
+  subCategory: string;
+  color: string;
+  size: string;
+  sku: string;
+  price: number;
+  quantity: number;
+};
+export interface ImportListProductPayload {
+  products: ImportProductPayload[];
+}
+export interface TestImportListProductDataResponse {
+  summary: {
+    totalRows: number;
+    validRows: number;
+    invalidRows: number;
+  };
+  errors: ImportError[];
+}
+export interface TestImportListProductResponse extends BaseResponse<TestImportListProductDataResponse> {}
+export interface LiveImportListProductDataResponse {
+  recordsImported: number;
+  errors: ImportError[];
+}
+export interface LiveImportListProductResponse extends BaseResponse<LiveImportListProductDataResponse> {}
 
 /**
  * Check Product name exist

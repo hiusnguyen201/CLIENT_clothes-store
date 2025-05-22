@@ -23,7 +23,7 @@ export type SelectFormFieldProps<T> = {
   value?: T | null;
   label?: string;
   required?: boolean;
-  onValueChange?: (value: T) => void;
+  onValueChange?: (value: T | null) => void;
 };
 
 export function SelectFormField<T>({
@@ -44,7 +44,7 @@ export function SelectFormField<T>({
   };
 
   const handleChange = (value: T | null) => {
-    if (onValueChange) onValueChange(value);
+    onValueChange?.(value);
   };
 
   return (

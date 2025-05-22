@@ -10,6 +10,8 @@ import {
   CancelOrderResponse,
   CreateShipOrderResponse,
   ProcessingOrderResponse,
+  TestImportListOrderResponse,
+  LiveImportListOrderResponse,
 } from "@/redux/order/order.type";
 import {
   getListOrder,
@@ -22,6 +24,8 @@ import {
   createShipOrder,
   processingOrder,
   exportListOrderExcel,
+  liveImportListOrder,
+  testImportListOrder,
 } from "@/redux/order/order.thunk";
 
 const initialState: OrderState = {
@@ -37,14 +41,23 @@ const initialState: OrderState = {
     createShipOrder: false,
     processingOrder: false,
     exportListOrderExcel: false,
+    testImportListOrder: false,
+    liveImportListOrder: false,
   },
   newItem: null,
   item: null,
-  initializedList: false,
   list: [],
   totalCount: 0,
   error: null,
   removedOrderIds: [],
+  summaryTestImport: {
+    totalRows: 0,
+    validRows: 0,
+    invalidRows: 0,
+  },
+  errorsTestImport: [],
+  errorsLiveImport: [],
+  recordsImported: 0,
 };
 
 const orderSlice = createSlice({
@@ -52,6 +65,56 @@ const orderSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder: ActionReducerMapBuilder<OrderState>) => {
+    builder
+      // Test Import List Order
+      .addCase(testImportListOrder.pending, (state: Draft<OrderState>) => {
+        state.loading.testImportListOrder = true;
+        state.error = null;
+      })
+      .addCase(
+        testImportListOrder.fulfilled,
+        (state: Draft<OrderState>, action: PayloadAction<TestImportListOrderResponse>) => {
+          const { data } = action.payload;
+          state.loading.testImportListOrder = false;
+          state.error = null;
+          state.errorsTestImport = data.errors;
+          state.summaryTestImport = data.summary;
+        }
+      )
+      .addCase(testImportListOrder.rejected, (state: Draft<OrderState>, action: PayloadAction<any>) => {
+        state.loading.testImportListOrder = false;
+        state.error = action.payload as string;
+        state.errorsTestImport = [];
+        state.summaryTestImport = {
+          invalidRows: 0,
+          totalRows: 0,
+          validRows: 0,
+        };
+      });
+
+    builder
+      // Live Import List Order
+      .addCase(liveImportListOrder.pending, (state: Draft<OrderState>) => {
+        state.loading.liveImportListOrder = true;
+        state.error = null;
+      })
+      .addCase(
+        liveImportListOrder.fulfilled,
+        (state: Draft<OrderState>, action: PayloadAction<LiveImportListOrderResponse>) => {
+          const { data } = action.payload;
+          state.loading.liveImportListOrder = false;
+          state.error = null;
+          state.errorsLiveImport = data.errors;
+          state.recordsImported = data.recordsImported;
+        }
+      )
+      .addCase(liveImportListOrder.rejected, (state: Draft<OrderState>, action: PayloadAction<any>) => {
+        state.loading.liveImportListOrder = false;
+        state.error = action.payload as string;
+        state.errorsLiveImport = [];
+        state.recordsImported = 0;
+      });
+
     // Create Order
     builder
       .addCase(createOrder.pending, (state) => {
@@ -82,14 +145,12 @@ const orderSlice = createSlice({
         state.error = null;
         state.list = data.list;
         state.totalCount = data.totalCount;
-        state.initializedList = true;
       })
       .addCase(getListOrder.rejected, (state: Draft<OrderState>, action: PayloadAction<any>) => {
         state.loading.getListOrder = false;
         state.error = action.payload as string;
         state.list = [];
         state.totalCount = 0;
-        state.initializedList = true;
       });
 
     builder

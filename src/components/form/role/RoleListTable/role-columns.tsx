@@ -15,8 +15,15 @@ import { RemoveRoleDialogForm } from "@/components/form/role/RemoveRoleDialogFor
 import { useState } from "react";
 import { usePermission } from "@/hooks/use-permission";
 import { PERMISSIONS } from "@/constants/permissions";
+import { CopyValue } from "@/components/CopyValue";
 
 export const roleColumns: ColumnDef<Role, any>[] = [
+  {
+    id: "id",
+    header: "ID",
+    maxSize: 64,
+    cell: ({ row }) => <CopyValue value={row.original.id} hiddenValue />,
+  },
   {
     accessorKey: "name",
     header: "Name",
@@ -31,6 +38,11 @@ export const roleColumns: ColumnDef<Role, any>[] = [
     header: "Description",
     maxSize: 600,
     cell: ({ row }) => <TruncatedTextWithTooltip>{row.original.description}</TruncatedTextWithTooltip>,
+  },
+  {
+    id: "totalPermissions",
+    header: "Total permissions",
+    cell: ({ row }) => row.original.totalPermissions,
   },
   {
     id: "actions",

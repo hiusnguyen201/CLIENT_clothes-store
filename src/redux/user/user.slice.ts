@@ -42,7 +42,6 @@ const initialState: UserState = {
   },
   newItem: null,
   item: null,
-  initializedList: false,
   list: [],
   totalCount: 0,
   error: null,
@@ -108,14 +107,12 @@ const userSlice = createSlice({
         state.error = null;
         state.list = data.list;
         state.totalCount = data.totalCount;
-        state.initializedList = true;
       })
       .addCase(getListUser.rejected, (state: Draft<UserState>, action: PayloadAction<any>) => {
         state.loading.getListUser = false;
         state.error = action.payload as string;
         state.list = [];
         state.totalCount = 0;
-        state.initializedList = true;
       });
 
     builder
@@ -177,7 +174,7 @@ const userSlice = createSlice({
         }
       )
       .addCase(liveImportListUser.rejected, (state: Draft<UserState>, action: PayloadAction<any>) => {
-        state.loading.testImportListUser = false;
+        state.loading.liveImportListUser = false;
         state.error = action.payload as string;
         state.errorsLiveImport = [];
         state.recordsImported = 0;
@@ -288,7 +285,5 @@ const userSlice = createSlice({
       });
   },
 });
-
-export const { resetLiveImport, resetTestImport } = userSlice.actions;
 
 export default userSlice.reducer;

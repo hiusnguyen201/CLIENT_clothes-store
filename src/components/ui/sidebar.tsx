@@ -195,7 +195,7 @@ const Sidebar = React.forwardRef<
       />
       <div
         className={cn(
-          "duration-200 fixed bottom-0 top-14 z-10 flex w-[--sidebar-width] transition-[left,right,width] ease-linear",
+          "duration-200 fixed bottom-0 top-16 z-10 flex w-[--sidebar-width] transition-[left,right,width] ease-linear",
           side === "left"
             ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
             : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",

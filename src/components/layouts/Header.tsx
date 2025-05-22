@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 export function Header() {
   const { user } = useAuth();
   const { open } = useSidebar();
-  console.log(user);
   return (
     <header className="bg-black z-[50] left-0 right-0 fixed top-0 w-full px-2 flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear">
       <Link

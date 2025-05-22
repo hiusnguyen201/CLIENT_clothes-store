@@ -6,6 +6,8 @@ import {
   GetCustomerResponse,
   RemoveCustomerResponse,
   CustomerState,
+  LiveImportListCustomerResponse,
+  TestImportListCustomerResponse,
 } from "@/redux/customer/customer.type";
 import {
   getListCustomer,
@@ -14,6 +16,8 @@ import {
   editCustomerInfo,
   removeCustomer,
   exportListCustomerExcel,
+  liveImportListCustomer,
+  testImportListCustomer,
 } from "@/redux/customer/customer.thunk";
 
 const initialState: CustomerState = {
@@ -24,14 +28,23 @@ const initialState: CustomerState = {
     editCustomer: false,
     removeCustomer: false,
     exportListCustomerExcel: false,
+    liveImportListCustomer: false,
+    testImportListCustomer: false,
   },
   newItem: null,
   item: null,
-  initializedList: false,
   list: [],
   totalCount: 0,
   error: null,
   removedCustomerIds: [],
+  summaryTestImport: {
+    totalRows: 0,
+    validRows: 0,
+    invalidRows: 0,
+  },
+  errorsTestImport: [],
+  errorsLiveImport: [],
+  recordsImported: 0,
 };
 
 const customerSlice = createSlice({
@@ -70,7 +83,7 @@ const customerSlice = createSlice({
           state.loading.getListCustomer = false;
           state.error = null;
           state.list = data.list;
-          state.initializedList = true;
+
           state.totalCount = data.totalCount;
         }
       )
@@ -79,7 +92,56 @@ const customerSlice = createSlice({
         state.error = action.payload as string;
         state.list = [];
         state.totalCount = 0;
-        state.initializedList = true;
+      });
+
+    builder
+      // Test Import List Customer
+      .addCase(testImportListCustomer.pending, (state: Draft<CustomerState>) => {
+        state.loading.testImportListCustomer = true;
+        state.error = null;
+      })
+      .addCase(
+        testImportListCustomer.fulfilled,
+        (state: Draft<CustomerState>, action: PayloadAction<TestImportListCustomerResponse>) => {
+          const { data } = action.payload;
+          state.loading.testImportListCustomer = false;
+          state.error = null;
+          state.errorsTestImport = data.errors;
+          state.summaryTestImport = data.summary;
+        }
+      )
+      .addCase(testImportListCustomer.rejected, (state: Draft<CustomerState>, action: PayloadAction<any>) => {
+        state.loading.testImportListCustomer = false;
+        state.error = action.payload as string;
+        state.errorsTestImport = [];
+        state.summaryTestImport = {
+          invalidRows: 0,
+          totalRows: 0,
+          validRows: 0,
+        };
+      });
+
+    builder
+      // Live Import List Customer
+      .addCase(liveImportListCustomer.pending, (state: Draft<CustomerState>) => {
+        state.loading.liveImportListCustomer = true;
+        state.error = null;
+      })
+      .addCase(
+        liveImportListCustomer.fulfilled,
+        (state: Draft<CustomerState>, action: PayloadAction<LiveImportListCustomerResponse>) => {
+          const { data } = action.payload;
+          state.loading.liveImportListCustomer = false;
+          state.error = null;
+          state.errorsLiveImport = data.errors;
+          state.recordsImported = data.recordsImported;
+        }
+      )
+      .addCase(liveImportListCustomer.rejected, (state: Draft<CustomerState>, action: PayloadAction<any>) => {
+        state.loading.liveImportListCustomer = false;
+        state.error = action.payload as string;
+        state.errorsLiveImport = [];
+        state.recordsImported = 0;
       });
 
     builder

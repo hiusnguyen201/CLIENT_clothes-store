@@ -11,6 +11,8 @@ import {
   removeRolePermissionService,
   removeRoleService,
   exportListRoleExcelService,
+  testImportListRoleExcelService,
+  liveImportListRoleExcelService,
 } from "@/redux/role/role.service";
 import {
   CheckRoleNameExistPayload,
@@ -34,6 +36,9 @@ import {
   GetListUnassignedRolePermissionsResponse,
   GetListUnassignedRolePermissionsPayload,
   ExportListRoleExcelResponse,
+  TestImportListRoleResponse,
+  ImportListRolePayload,
+  LiveImportListRoleResponse,
 } from "@/redux/role/role.type";
 import { ThunkApiConfig } from "@/types/thunk-api";
 import { downloadFileBlob } from "@/utils/object";
@@ -70,6 +75,32 @@ export const getListRole = createAsyncThunk<GetListRoleResponse, GetListRolePayl
   async (filters, { rejectWithValue }) => {
     try {
       const response: GetListRoleResponse = await getListRoleService(filters);
+      return response;
+    } catch (e: any) {
+      const message: string = e?.response?.data?.message || e.message || e.toString();
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const testImportListRole = createAsyncThunk<TestImportListRoleResponse, ImportListRolePayload, ThunkApiConfig>(
+  "role/test-import-list-role",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response: TestImportListRoleResponse = await testImportListRoleExcelService(payload);
+      return response;
+    } catch (e: any) {
+      const message: string = e?.response?.data?.message || e.message || e.toString();
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const liveImportListRole = createAsyncThunk<LiveImportListRoleResponse, ImportListRolePayload, ThunkApiConfig>(
+  "role/live-import-list-role",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response: LiveImportListRoleResponse = await liveImportListRoleExcelService(payload);
       return response;
     } catch (e: any) {
       const message: string = e?.response?.data?.message || e.message || e.toString();

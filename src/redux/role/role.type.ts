@@ -1,4 +1,4 @@
-import { Nullable, Optional } from "@/types/common";
+import { ImportError, Nullable, Optional } from "@/types/common";
 import { Permission } from "@/types/permission";
 import { BaseResponse, GetListParams, GetListResponseData } from "@/types/response";
 import { Role } from "@/types/role";
@@ -19,17 +19,25 @@ export interface RoleState {
     addRolePermissions: boolean;
     removeRolePermission: boolean;
     exportListRoleExcel: boolean;
+    testImportListRole: boolean;
+    liveImportListRole: boolean;
   };
   newItem: Nullable<Role>;
   item: Nullable<Role>;
   list: Role[];
   totalCount: number;
-  initializedList: boolean;
-  initializedListRolePermission: boolean;
   error: Nullable<string>;
   assignedRolePermissions: Permission[];
   unassignedRolePermissions: Permission[];
   removedRoleIds: string[];
+  summaryTestImport: {
+    totalRows: number;
+    validRows: number;
+    invalidRows: number;
+  };
+  recordsImported: number;
+  errorsTestImport: ImportError[];
+  errorsLiveImport: ImportError[];
 }
 
 /**
@@ -49,6 +57,31 @@ export interface GetListRolePayload extends GetListParams<Role> {
   sortBy?: Optional<Nullable<RoleFieldsSort>>;
 }
 export interface GetListRoleResponse extends GetListResponseData<Role> {}
+
+/**
+ *  Import List Role
+ */
+export type ImportRolePayload = {
+  name: string;
+  description: string;
+};
+export interface ImportListRolePayload {
+  roles: ImportRolePayload[];
+}
+export interface TestImportListRoleDataResponse {
+  summary: {
+    totalRows: number;
+    validRows: number;
+    invalidRows: number;
+  };
+  errors: ImportError[];
+}
+export interface TestImportListRoleResponse extends BaseResponse<TestImportListRoleDataResponse> {}
+export interface LiveImportListRoleDataResponse {
+  recordsImported: number;
+  errors: ImportError[];
+}
+export interface LiveImportListRoleResponse extends BaseResponse<LiveImportListRoleDataResponse> {}
 
 /**
  * Export List Role To Excel

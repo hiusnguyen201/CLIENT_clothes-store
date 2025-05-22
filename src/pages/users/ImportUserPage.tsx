@@ -13,7 +13,7 @@ export function ImportUserPage() {
       </Link>
 
       <Heading
-        title="Import User"
+        title="Import Users"
         description="Upload your Excel file, map columns to database fields, and import data with validation."
       />
 

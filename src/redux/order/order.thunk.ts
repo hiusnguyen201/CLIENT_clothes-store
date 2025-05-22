@@ -8,8 +8,10 @@ import {
   // editOrderInfoService,
   getListOrderService,
   getOrderService,
+  liveImportListOrderExcelService,
   processingOrderService,
   removeOrderService,
+  testImportListOrderExcelService,
 } from "@/redux/order/order.service";
 import {
   CancelOrderPayload,
@@ -27,13 +29,44 @@ import {
   GetListOrderResponse,
   GetOrderPayload,
   GetOrderResponse,
+  ImportListOrderPayload,
+  LiveImportListOrderResponse,
   ProcessingOrderPayload,
   ProcessingOrderResponse,
   RemoveOrderPayload,
   RemoveOrderResponse,
+  TestImportListOrderResponse,
 } from "@/redux/order/order.type";
 import { ThunkApiConfig } from "@/types/thunk-api";
 import { downloadFileBlob } from "@/utils/object";
+
+export const testImportListOrder = createAsyncThunk<
+  TestImportListOrderResponse,
+  ImportListOrderPayload,
+  ThunkApiConfig
+>("order/test-import-list-order", async (payload, { rejectWithValue }) => {
+  try {
+    const response: TestImportListOrderResponse = await testImportListOrderExcelService(payload);
+    return response;
+  } catch (e: any) {
+    const message: string = e?.response?.data?.message || e.message || e.toString();
+    return rejectWithValue(message);
+  }
+});
+
+export const liveImportListOrder = createAsyncThunk<
+  LiveImportListOrderResponse,
+  ImportListOrderPayload,
+  ThunkApiConfig
+>("order/live-import-list-order", async (payload, { rejectWithValue }) => {
+  try {
+    const response: LiveImportListOrderResponse = await liveImportListOrderExcelService(payload);
+    return response;
+  } catch (e: any) {
+    const message: string = e?.response?.data?.message || e.message || e.toString();
+    return rejectWithValue(message);
+  }
+});
 
 export const createOrder = createAsyncThunk<CreateOrderResponse, CreateOrderPayload, ThunkApiConfig>(
   "order/create-order",

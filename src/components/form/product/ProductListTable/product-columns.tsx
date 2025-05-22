@@ -20,8 +20,15 @@ import { formatCurrencyVND } from "@/utils/string";
 import { Image } from "@/components/Image";
 import { usePermission } from "@/hooks/use-permission";
 import { PERMISSIONS } from "@/constants/permissions";
+import { CopyValue } from "@/components/CopyValue";
 
 export const productColumns: ColumnDef<Product, any>[] = [
+  {
+    id: "id",
+    header: "ID",
+    maxSize: 64,
+    cell: ({ row }) => <CopyValue value={row.original.id} hiddenValue />,
+  },
   {
     accessorKey: "name",
     header: "Name",

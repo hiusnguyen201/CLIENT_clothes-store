@@ -17,8 +17,15 @@ import { formatCurrencyVND } from "@/utils/string";
 import { BadgeOrderStatus } from "@/components/BadgeOrderStatus";
 import { usePermission } from "@/hooks/use-permission";
 import { PERMISSIONS } from "@/constants/permissions";
+import { CopyValue } from "@/components/CopyValue";
 
 export const orderColumns: ColumnDef<Order, any>[] = [
+  {
+    id: "id",
+    header: "ID",
+    maxSize: 64,
+    cell: ({ row }) => <CopyValue value={row.original.id} hiddenValue />,
+  },
   {
     accessorKey: "code",
     header: "Code",

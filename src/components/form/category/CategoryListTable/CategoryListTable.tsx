@@ -1,7 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { DataTable } from "@/components/data-table";
 import { getListCategory } from "@/redux/category/category.thunk";
-import { DataTableLoading } from "@/components/data-table/DataTableLoading";
 import { DataTablePagination } from "@/components/data-table/DataTablePagination";
 import { CategoryFieldsSort, CategoryState } from "@/redux/category/category.type";
 import { toast } from "@/hooks/use-toast";
@@ -13,7 +12,7 @@ import { ExportListCategoryExcelButton } from "../ExportListCategoryExcelButton"
 
 export function CategoryListTable() {
   const dispatch = useAppDispatch();
-  const { list, totalCount, loading, initializedList, removedCategoryIds, newItem } = useAppSelector<CategoryState>(
+  const { list, totalCount, loading, removedCategoryIds, newItem } = useAppSelector<CategoryState>(
     (state) => state.category
   );
   const { filters, handlePageChange, handleLimitChange, handleSortChange, handleKeywordChange } =
@@ -32,7 +31,7 @@ export function CategoryListTable() {
   }, [filters, dispatch, removedCategoryIds, newItem]);
 
   return (
-    <DataTableLoading initialized={initializedList} className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-6 w-full">
       <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-3">
         <SearchFormField
           name="keyword"
@@ -41,10 +40,6 @@ export function CategoryListTable() {
           onValueChange={handleKeywordChange}
           placeholder="Enter a keyword"
         />
-      </div>
-
-      <div className="flex items-center justify-end">
-        <ExportListCategoryExcelButton filters={filters} />
       </div>
 
       <DataTable
@@ -65,6 +60,6 @@ export function CategoryListTable() {
         onLimitChange={handleLimitChange}
         onPageChange={handlePageChange}
       />
-    </DataTableLoading>
+    </div>
   );
 }

@@ -3,4 +3,7 @@ export type Role = {
   name: string;
   slug: string;
   description: string;
+  totalPermissions: number;
+  createdAt: Date;
+  updatedAt: Date;
 };

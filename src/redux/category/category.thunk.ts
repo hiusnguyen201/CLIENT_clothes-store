@@ -7,7 +7,9 @@ import {
   getCategoryService,
   getListCategoryService,
   getListSubcategoryService,
+  liveImportListCategoryExcelService,
   removeCategoryService,
+  testImportListCategoryExcelService,
 } from "@/redux/category/category.service";
 import {
   GetListCategoryPayload,
@@ -25,9 +27,40 @@ import {
   GetListSubcategoryResponse,
   GetListSubcategoryPayload,
   ExportListCategoryExcelResponse,
+  TestImportListCategoryResponse,
+  ImportListCategoryPayload,
+  LiveImportListCategoryResponse,
 } from "@/redux/category/category.type";
 import { ThunkApiConfig } from "@/types/thunk-api";
 import { downloadFileBlob } from "@/utils/object";
+
+export const testImportListCategory = createAsyncThunk<
+  TestImportListCategoryResponse,
+  ImportListCategoryPayload,
+  ThunkApiConfig
+>("category/test-import-list-category", async (payload, { rejectWithValue }) => {
+  try {
+    const response: TestImportListCategoryResponse = await testImportListCategoryExcelService(payload);
+    return response;
+  } catch (e: any) {
+    const message: string = e?.response?.data?.message || e.message || e.toString();
+    return rejectWithValue(message);
+  }
+});
+
+export const liveImportListCategory = createAsyncThunk<
+  LiveImportListCategoryResponse,
+  ImportListCategoryPayload,
+  ThunkApiConfig
+>("category/live-import-list-category", async (payload, { rejectWithValue }) => {
+  try {
+    const response: LiveImportListCategoryResponse = await liveImportListCategoryExcelService(payload);
+    return response;
+  } catch (e: any) {
+    const message: string = e?.response?.data?.message || e.message || e.toString();
+    return rejectWithValue(message);
+  }
+});
 
 export const createCategory = createAsyncThunk<CreateCategoryResponse, CreateCategoryPayload, ThunkApiConfig>(
   "category/create-category",

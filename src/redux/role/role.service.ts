@@ -22,6 +22,9 @@ import {
   GetListUnassignedRolePermissionsPayload,
   GetListUnassignedRolePermissionsResponse,
   ExportListRoleExcelResponse,
+  ImportListRolePayload,
+  TestImportListRoleResponse,
+  LiveImportListRoleResponse,
 } from "@/redux/role/role.type";
 
 export const checkRoleNameExistService = async (
@@ -36,6 +39,18 @@ export const createRoleService = async (payload: CreateRolePayload): Promise<Cre
 
 export const getListRoleService = async (payload: GetListRolePayload): Promise<GetListRoleResponse> => {
   return await apiInstance.get(`/roles/get-roles?${convertToSearchParams(payload)}`);
+};
+
+export const testImportListRoleExcelService = async (
+  payload: ImportListRolePayload
+): Promise<TestImportListRoleResponse> => {
+  return await apiInstance.post(`/roles/test-import`, payload);
+};
+
+export const liveImportListRoleExcelService = async (
+  payload: ImportListRolePayload
+): Promise<LiveImportListRoleResponse> => {
+  return await apiInstance.post(`/roles/live-import`, payload);
 };
 
 export const exportListRoleExcelService = async (payload: GetListRolePayload): Promise<ExportListRoleExcelResponse> => {

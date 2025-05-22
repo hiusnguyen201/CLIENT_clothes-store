@@ -10,8 +10,8 @@ export type FieldMapping = {
 
 export type ImportStep = "upload" | "mapping" | "preview" | "results";
 
-export type DatabaseField = {
-  name: string;
+export type DatabaseField<T extends Record<string, any>> = {
+  name: keyof T;
   type: "text" | "number";
   constraints: {
     required?: boolean;
@@ -33,6 +33,11 @@ export type ValidationError = {
   field: string;
   message: string;
 };
+
+export interface SuccessRow {
+  row: number;
+  data: Record<string, any>;
+}
 
 export type ImportResult = {
   success: boolean;

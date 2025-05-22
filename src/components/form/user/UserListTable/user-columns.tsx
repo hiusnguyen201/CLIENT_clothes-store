@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Clipboard, Mail, MoreHorizontal, Phone, Trash } from "lucide-react";
+import { Clipboard, Copy, Mail, MoreHorizontal, Phone, Trash } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   DropdownMenu,
@@ -20,12 +20,19 @@ import { Image } from "@/components/Image";
 import { usePermission } from "@/hooks/use-permission";
 import { PERMISSIONS } from "@/constants/permissions";
 import { BadgeUserStatus } from "@/components/BadgeUserStatus";
+import { CopyValue } from "@/components/CopyValue";
 
 export const userColumns: ColumnDef<User, any>[] = [
   {
+    id: "id",
+    header: "ID",
+    maxSize: 64,
+    cell: ({ row }) => <CopyValue value={row.original.id} hiddenValue />,
+  },
+  {
     accessorKey: "name",
     header: "Name",
-    minSize: 400,
+    minSize: 300,
     cell: ({ row }) => {
       const user = row.original;
 
@@ -47,7 +54,7 @@ export const userColumns: ColumnDef<User, any>[] = [
   {
     accessorKey: "role",
     header: "Role",
-    minSize: 250,
+    minSize: 80,
     enableSorting: false,
     cell: ({ row }) => {
       const user = row.original;

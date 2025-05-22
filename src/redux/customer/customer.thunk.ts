@@ -6,6 +6,8 @@ import {
   getCustomerService,
   removeCustomerService,
   exportListCustomerExcelService,
+  liveImportListCustomerExcelService,
+  testImportListCustomerExcelService,
 } from "@/redux/customer/customer.service";
 import {
   CreateCustomerPayload,
@@ -19,9 +21,40 @@ import {
   RemoveCustomerPayload,
   RemoveCustomerResponse,
   ExportListCustomerExcelResponse,
+  TestImportListCustomerResponse,
+  ImportListCustomerPayload,
+  LiveImportListCustomerResponse,
 } from "@/redux/customer/customer.type";
 import { ThunkApiConfig } from "@/types/thunk-api";
 import { downloadFileBlob } from "@/utils/object";
+
+export const testImportListCustomer = createAsyncThunk<
+  TestImportListCustomerResponse,
+  ImportListCustomerPayload,
+  ThunkApiConfig
+>("customer/test-import-list-customer", async (payload, { rejectWithValue }) => {
+  try {
+    const response: TestImportListCustomerResponse = await testImportListCustomerExcelService(payload);
+    return response;
+  } catch (e: any) {
+    const message: string = e?.response?.data?.message || e.message || e.toString();
+    return rejectWithValue(message);
+  }
+});
+
+export const liveImportListCustomer = createAsyncThunk<
+  LiveImportListCustomerResponse,
+  ImportListCustomerPayload,
+  ThunkApiConfig
+>("customer/live-import-list-customer", async (payload, { rejectWithValue }) => {
+  try {
+    const response: LiveImportListCustomerResponse = await liveImportListCustomerExcelService(payload);
+    return response;
+  } catch (e: any) {
+    const message: string = e?.response?.data?.message || e.message || e.toString();
+    return rejectWithValue(message);
+  }
+});
 
 export const createCustomer = createAsyncThunk<CreateCustomerResponse, CreateCustomerPayload, ThunkApiConfig>(
   "customer/create-customer",

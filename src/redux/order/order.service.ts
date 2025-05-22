@@ -18,7 +18,22 @@ import {
   ProcessingOrderPayload,
   ProcessingOrderResponse,
   ExportListOrderExcelResponse,
+  ImportListOrderPayload,
+  TestImportListOrderResponse,
+  LiveImportListOrderResponse,
 } from "@/redux/order/order.type";
+
+export const testImportListOrderExcelService = async (
+  payload: ImportListOrderPayload
+): Promise<TestImportListOrderResponse> => {
+  return await apiInstance.post(`/orders/test-import`, payload);
+};
+
+export const liveImportListOrderExcelService = async (
+  payload: ImportListOrderPayload
+): Promise<LiveImportListOrderResponse> => {
+  return await apiInstance.post(`/orders/live-import`, payload);
+};
 
 export const createOrderService = async (payload: CreateOrderPayload): Promise<CreateOrderResponse> => {
   return await apiInstance.post("/orders/create-order", payload);

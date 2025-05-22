@@ -2,7 +2,6 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useEffect } from "react";
 import { DataTable } from "@/components/data-table";
 import { getListOrder } from "@/redux/order/order.thunk";
-import { DataTableLoading } from "@/components/data-table/DataTableLoading";
 import { DataTablePagination } from "@/components/data-table/DataTablePagination";
 import { OrderFieldsSort, OrderState } from "@/redux/order/order.type";
 import { toast } from "@/hooks/use-toast";
@@ -10,15 +9,12 @@ import { useOrderTableFilters } from "./useOrderTableFilters";
 import { SearchFormField } from "@/components/form-fields/SearchFormFIeld";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ORDER_STATUS } from "@/types/order";
-import { ExportListOrderExcelButton } from "@/components/form/order/ExportListOrderExcelButton";
 import { orderColumns } from "./order-columns";
 import { OrderFilterSidebarForm } from "./OrderFilterSidebarForm";
 
 export function OrderListTable() {
   const dispatch = useAppDispatch();
-  const { list, totalCount, loading, initializedList, removedOrderIds, newItem } = useAppSelector<OrderState>(
-    (state) => state.order
-  );
+  const { list, totalCount, loading, removedOrderIds, newItem } = useAppSelector<OrderState>((state) => state.order);
   const {
     filters,
     handlePageChange,
@@ -42,7 +38,7 @@ export function OrderListTable() {
   }, [filters, removedOrderIds, dispatch, newItem]);
 
   return (
-    <DataTableLoading initialized={initializedList} className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-6 w-full">
       <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-3">
         <SearchFormField
           name="keyword"
@@ -59,10 +55,6 @@ export function OrderListTable() {
             maxTotal: filters.maxTotal,
           }}
         />
-      </div>
-
-      <div className="flex items-center justify-end">
-        <ExportListOrderExcelButton filters={filters} />
       </div>
 
       <Tabs defaultValue="all" value={filters.status ?? "all"} onValueChange={handleStatusChange}>
@@ -111,6 +103,6 @@ export function OrderListTable() {
         onLimitChange={handleLimitChange}
         onPageChange={handlePageChange}
       />
-    </DataTableLoading>
+    </div>
   );
 }

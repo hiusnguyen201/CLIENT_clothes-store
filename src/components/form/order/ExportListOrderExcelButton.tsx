@@ -2,14 +2,12 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { exportListOrderExcel } from "@/redux/order/order.thunk";
-import { GetListOrderPayload, OrderState } from "@/redux/order/order.type";
+import { OrderState } from "@/redux/order/order.type";
 import { Download } from "lucide-react";
-import { usePermission } from "@/hooks/use-permission";
-import { PERMISSIONS } from "@/constants/permissions";
+import { useOrderTableFilters } from "./OrderListTable/useOrderTableFilters";
 
-export function ExportListOrderExcelButton({ filters }: { filters: GetListOrderPayload }) {
-  const can = usePermission();
-  if (!can(PERMISSIONS.EXPORT_ORDERS_EXCEL)) return null;
+export function ExportListOrderExcelButton() {
+  const { filters } = useOrderTableFilters();
 
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector<OrderState>((selector) => selector.order);

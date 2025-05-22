@@ -2,24 +2,17 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useEffect } from "react";
 import { DataTable } from "@/components/data-table";
 import { getListUser } from "@/redux/user/user.thunk";
-import { DataTableLoading } from "@/components/data-table/DataTableLoading";
 import { DataTablePagination } from "@/components/data-table/DataTablePagination";
 import { UserFieldsSort, UserState } from "@/redux/user/user.type";
 import { toast } from "@/hooks/use-toast";
 import { SearchFormField } from "@/components/form-fields/SearchFormFIeld";
-import { ExportListUserExcelButton } from "@/components/form/user/ExportListUserExcelButton";
 import { useUserTableFilters } from "./useUserTableFilters";
 import { userColumns } from "./user-columns";
 import { UserFilterSidebarForm } from "./UserFilterSidebarForm";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Import } from "lucide-react";
 
 export function UserListTable() {
   const dispatch = useAppDispatch();
-  const { list, totalCount, loading, initializedList, removedUserIds, newItem } = useAppSelector<UserState>(
-    (state) => state.user
-  );
+  const { list, totalCount, loading, removedUserIds, newItem } = useAppSelector<UserState>((state) => state.user);
   const { filters, handlePageChange, handleLimitChange, handleKeywordChange, handleFiltersChange, handleSortChange } =
     useUserTableFilters();
 
@@ -36,7 +29,7 @@ export function UserListTable() {
   }, [filters, dispatch, removedUserIds, newItem]);
 
   return (
-    <DataTableLoading initialized={initializedList} className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-6 w-full">
       <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-3">
         <SearchFormField
           name="keyword"
@@ -55,18 +48,9 @@ export function UserListTable() {
         />
       </div>
 
-      <div className="flex items-center sm:justify-end gap-3">
-        <Link to={"/users/import"}>
-          <Button className="min-w-[100px] sm:max-w-[120px]" variant="outline">
-            <Import />
-            Import
-          </Button>
-        </Link>
-        <ExportListUserExcelButton filters={filters} />
-      </div>
-
       <DataTable
         data={list}
+        loading={loading.getListUser}
         onSortingChange={(sorting) => {
           handleSortChange(sorting[0]?.id as UserFieldsSort, sorting[0]?.desc);
         }}
@@ -83,6 +67,6 @@ export function UserListTable() {
         onLimitChange={handleLimitChange}
         onPageChange={handlePageChange}
       />
-    </DataTableLoading>
+    </div>
   );
 }

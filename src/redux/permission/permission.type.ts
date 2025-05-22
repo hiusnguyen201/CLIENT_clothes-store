@@ -11,7 +11,6 @@ export interface PermissionState {
     exportListPermissionExcel: boolean;
   };
   item: Nullable<Permission>;
-  initializedList: boolean;
   list: Permission[];
   totalCount: number;
   error: Nullable<string>;

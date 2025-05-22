@@ -2,9 +2,9 @@ import { ColumnDef, flexRender, getCoreRowModel, SortingState, Table, useReactTa
 import { Table as TableContainer, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { Fragment } from "react/jsx-runtime";
-import { Spinner } from "@/components/spinner";
 import { useState } from "react";
 import { ArrowDownZA, ArrowUpAZ, ArrowUpDown } from "lucide-react";
+import { Skeleton } from "../ui/skeleton";
 
 export type DataTableProps<TData> = {
   data: TData[];
@@ -68,15 +68,14 @@ export function DataTable<TData>({
     },
   });
 
+  if (loading) {
+    return <SkeletonTable />;
+  }
+
   return (
-    <div className="overflow-x-auto flex flex-col w-full relative">
-      {loading && (
-        <div className="opacity-50 top-0 left-0 z-10 h-full absolute bg-white flex items-center w-full justify-center">
-          <Spinner size="large" />
-        </div>
-      )}
-      <TableContainer className={className}>
-        <TableHeader className="sticky top-0 bg-white border-b">
+    <div className="overflow-x-auto flex flex-col w-full relative max-h-[630px]">
+      <TableContainer className={cn(className)}>
+        <TableHeader className={cn("sticky top-0 bg-white border-b")}>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id} className="flex w-full">
               {/* {table.getRowModel().rows[index]?.subRows.length > 0 && (
@@ -126,7 +125,7 @@ export function DataTable<TData>({
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className={cn("block w-full overflow-auto", data.length > 15 ? "max-h-[630px]" : "")}>
+        <TableBody className={cn("block w-full overflow-auto")}>
           {data.length > 0 ? (
             table.getRowModel().rows.map((row) => (
               <Fragment key={row.id}>
@@ -202,6 +201,48 @@ export function DataTable<TData>({
           )}
         </TableBody>
       </TableContainer>
+    </div>
+  );
+}
+
+export function SkeletonTable({
+  columns = 5,
+  rows = 10,
+  heightPerRow = 48,
+}: {
+  columns?: number;
+  rows?: number;
+  heightPerRow?: number;
+}) {
+  return (
+    <div className="overflow-x-auto flex flex-col w-full relative">
+      <div className="rounded-md w-full">
+        {/* Header */}
+        <div className="sticky top-0 bg-white border-b flex w-full">
+          {[...Array(columns)].map((_, i) => (
+            <div key={i} className="flex-1 p-4">
+              <Skeleton className="h-4 w-3/4" />
+            </div>
+          ))}
+        </div>
+
+        {/* Body */}
+        <div className="block w-full overflow-auto max-h-[630px]">
+          {[...Array(rows)].map((_, rowIndex) => (
+            <div
+              key={rowIndex}
+              className="flex w-full items-center border-t"
+              style={{ minHeight: `${heightPerRow}px` }}
+            >
+              {[...Array(columns)].map((_, colIndex) => (
+                <div key={colIndex} className="flex-1 p-4">
+                  <Skeleton className="h-4 w-full" />
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

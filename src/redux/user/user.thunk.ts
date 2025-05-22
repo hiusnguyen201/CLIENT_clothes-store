@@ -40,6 +40,32 @@ import {
 import { ThunkApiConfig } from "@/types/thunk-api";
 import { downloadFileBlob } from "@/utils/object";
 
+export const testImportListUser = createAsyncThunk<TestImportListUserResponse, ImportListUserPayload, ThunkApiConfig>(
+  "user/test-import-list-user",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response: TestImportListUserResponse = await testImportListUserExcelService(payload);
+      return response;
+    } catch (e: any) {
+      const message: string = e?.response?.data?.message || e.message || e.toString();
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const liveImportListUser = createAsyncThunk<LiveImportListUserResponse, ImportListUserPayload, ThunkApiConfig>(
+  "user/live-import-list-user",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response: LiveImportListUserResponse = await liveImportListUserExcelService(payload);
+      return response;
+    } catch (e: any) {
+      const message: string = e?.response?.data?.message || e.message || e.toString();
+      return rejectWithValue(message);
+    }
+  }
+);
+
 export const createUser = createAsyncThunk<CreateUserResponse, CreateUserPayload, ThunkApiConfig>(
   "user/create-user",
   async (payload, { rejectWithValue }) => {
@@ -72,32 +98,6 @@ export const exportListUserExcel = createAsyncThunk<void, GetListUserPayload, Th
     try {
       const data: ExportListUserExcelResponse = await exportListUserExcelService(payload);
       downloadFileBlob(data, "users-list.xlsx");
-    } catch (e: any) {
-      const message: string = e?.response?.data?.message || e.message || e.toString();
-      return rejectWithValue(message);
-    }
-  }
-);
-
-export const testImportListUser = createAsyncThunk<TestImportListUserResponse, ImportListUserPayload, ThunkApiConfig>(
-  "user/test-import-list-user",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const response: TestImportListUserResponse = await testImportListUserExcelService(payload);
-      return response;
-    } catch (e: any) {
-      const message: string = e?.response?.data?.message || e.message || e.toString();
-      return rejectWithValue(message);
-    }
-  }
-);
-
-export const liveImportListUser = createAsyncThunk<LiveImportListUserResponse, ImportListUserPayload, ThunkApiConfig>(
-  "user/live-import-list-user",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const response: LiveImportListUserResponse = await liveImportListUserExcelService(payload);
-      return response;
     } catch (e: any) {
       const message: string = e?.response?.data?.message || e.message || e.toString();
       return rejectWithValue(message);

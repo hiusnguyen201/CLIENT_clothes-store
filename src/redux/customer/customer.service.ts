@@ -12,7 +12,22 @@ import {
   RemoveCustomerPayload,
   RemoveCustomerResponse,
   ExportListCustomerExcelResponse,
+  ImportListCustomerPayload,
+  TestImportListCustomerResponse,
+  LiveImportListCustomerResponse,
 } from "@/redux/customer/customer.type";
+
+export const testImportListCustomerExcelService = async (
+  payload: ImportListCustomerPayload
+): Promise<TestImportListCustomerResponse> => {
+  return await apiInstance.post(`/customers/test-import`, payload);
+};
+
+export const liveImportListCustomerExcelService = async (
+  payload: ImportListCustomerPayload
+): Promise<LiveImportListCustomerResponse> => {
+  return await apiInstance.post(`/customers/live-import`, payload);
+};
 
 export const createCustomerService = async (payload: CreateCustomerPayload): Promise<CreateCustomerResponse> => {
   return await apiInstance.post("/customers/create-customer", payload);

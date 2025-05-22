@@ -7,6 +7,8 @@ import {
   EditCategoryInfoResponse,
   GetCategoryResponse,
   GetListSubcategoryResponse,
+  LiveImportListCategoryResponse,
+  TestImportListCategoryResponse,
 } from "@/redux/category/category.type";
 import {
   checkCategoryNameExist,
@@ -16,7 +18,9 @@ import {
   getCategory,
   getListCategory,
   getListSubcategory,
+  liveImportListCategory,
   removeCategory,
+  testImportListCategory,
 } from "@/redux/category/category.thunk";
 
 const initialState: CategoryState = {
@@ -29,16 +33,24 @@ const initialState: CategoryState = {
     removeCategory: false,
     getListSubcategory: false,
     exportListCategoryExcel: false,
+    testImportListCategory: false,
+    liveImportListCategory: false,
   },
   newItem: null,
   item: null,
-  initializedList: false,
-  initializedSubList: false,
   list: [],
   listSub: [],
   totalCount: 0,
   error: null,
   removedCategoryIds: [],
+  summaryTestImport: {
+    totalRows: 0,
+    validRows: 0,
+    invalidRows: 0,
+  },
+  errorsTestImport: [],
+  errorsLiveImport: [],
+  recordsImported: 0,
 };
 
 const roleSlice = createSlice({
@@ -46,6 +58,56 @@ const roleSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder: ActionReducerMapBuilder<CategoryState>) => {
+    builder
+      // Test Import List Category
+      .addCase(testImportListCategory.pending, (state: Draft<CategoryState>) => {
+        state.loading.testImportListCategory = true;
+        state.error = null;
+      })
+      .addCase(
+        testImportListCategory.fulfilled,
+        (state: Draft<CategoryState>, action: PayloadAction<TestImportListCategoryResponse>) => {
+          const { data } = action.payload;
+          state.loading.testImportListCategory = false;
+          state.error = null;
+          state.errorsTestImport = data.errors;
+          state.summaryTestImport = data.summary;
+        }
+      )
+      .addCase(testImportListCategory.rejected, (state: Draft<CategoryState>, action: PayloadAction<any>) => {
+        state.loading.testImportListCategory = false;
+        state.error = action.payload as string;
+        state.errorsTestImport = [];
+        state.summaryTestImport = {
+          invalidRows: 0,
+          totalRows: 0,
+          validRows: 0,
+        };
+      });
+
+    builder
+      // Live Import List Category
+      .addCase(liveImportListCategory.pending, (state: Draft<CategoryState>) => {
+        state.loading.liveImportListCategory = true;
+        state.error = null;
+      })
+      .addCase(
+        liveImportListCategory.fulfilled,
+        (state: Draft<CategoryState>, action: PayloadAction<LiveImportListCategoryResponse>) => {
+          const { data } = action.payload;
+          state.loading.liveImportListCategory = false;
+          state.error = null;
+          state.errorsLiveImport = data.errors;
+          state.recordsImported = data.recordsImported;
+        }
+      )
+      .addCase(liveImportListCategory.rejected, (state: Draft<CategoryState>, action: PayloadAction<any>) => {
+        state.loading.liveImportListCategory = false;
+        state.error = action.payload as string;
+        state.errorsLiveImport = [];
+        state.recordsImported = 0;
+      });
+
     // Check Category Name
     builder
       .addCase(checkCategoryNameExist.pending, (state) => {
@@ -90,7 +152,7 @@ const roleSlice = createSlice({
         (state: Draft<CategoryState>, action: PayloadAction<GetListCategoryResponse>) => {
           const { data } = action.payload;
           state.loading.getListCategory = false;
-          state.initializedList = true;
+
           state.error = null;
           state.list = data.list;
           state.totalCount = data.totalCount;
@@ -100,7 +162,7 @@ const roleSlice = createSlice({
         state.loading.getListCategory = false;
         state.error = action.payload as string;
         state.list = [];
-        state.initializedList = true;
+
         state.totalCount = 0;
       });
 
@@ -191,14 +253,12 @@ const roleSlice = createSlice({
           state.loading.getListSubcategory = false;
           state.error = null;
           state.listSub = data.list;
-          state.initializedSubList = true;
         }
       )
       .addCase(getListSubcategory.rejected, (state: Draft<CategoryState>, action: PayloadAction<any>) => {
         state.loading.getListSubcategory = false;
         state.error = action.payload as string;
         state.listSub = [];
-        state.initializedSubList = true;
       });
   },
 });

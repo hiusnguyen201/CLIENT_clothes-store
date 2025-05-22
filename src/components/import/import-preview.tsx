@@ -29,7 +29,7 @@ export function ImportPreview({
   if (!data) return null;
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Preview and Import</h2>
         <div className="text-sm text-muted-foreground">
@@ -37,9 +37,9 @@ export function ImportPreview({
         </div>
       </div>
 
-      <Card>
-        <CardContent className="p-0 overflow-auto">
-          <Table>
+      <Card className="flex flex-col w-full">
+        <CardContent className="p-0 overflow-auto flex flex-col">
+          <Table className="max-w-full">
             <TableHeader>
               <TableRow>
                 {fieldMappings
@@ -60,7 +60,7 @@ export function ImportPreview({
                     .map((mapping, colIndex) => {
                       const originalIndex = fieldMappings.findIndex((m) => m.excelColumn === mapping.excelColumn);
                       return (
-                        <TableCell key={colIndex} className="whitespace-nowrap">
+                        <TableCell key={colIndex} className="whitespace-nowrap max-w-[400px] truncate">
                           {row[originalIndex] !== undefined ? String(row[originalIndex]) : ""}
                         </TableCell>
                       );

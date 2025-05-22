@@ -2,14 +2,12 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { exportListCategoryExcel } from "@/redux/category/category.thunk";
-import { GetListCategoryPayload, CategoryState } from "@/redux/category/category.type";
+import { CategoryState } from "@/redux/category/category.type";
 import { Download } from "lucide-react";
-import { PERMISSIONS } from "@/constants/permissions";
-import { usePermission } from "@/hooks/use-permission";
+import { useCategoryTableFilters } from "./CategoryListTable/useCategoryTableFilters";
 
-export function ExportListCategoryExcelButton({ filters }: { filters: GetListCategoryPayload }) {
-  const can = usePermission();
-  if (!can(PERMISSIONS.EXPORT_CATEGORIES_EXCEL)) return null;
+export function ExportListCategoryExcelButton() {
+  const { filters } = useCategoryTableFilters();
 
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector<CategoryState>((selector) => selector.category);

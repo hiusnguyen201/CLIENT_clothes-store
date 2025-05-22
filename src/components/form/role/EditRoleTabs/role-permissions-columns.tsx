@@ -8,8 +8,15 @@ import { Role } from "@/types/role";
 import { RemoveRolePermissionDialogForm } from "@/components/form/role/EditRoleTabs/RemoveRolePermissionDialogForm";
 import { usePermission } from "@/hooks/use-permission";
 import { PERMISSIONS } from "@/constants/permissions";
+import { CopyValue } from "@/components/CopyValue";
 
 export const rolePermissionsColumns: ColumnDef<{ role: Role; permission: Permission }, any>[] = [
+  {
+    id: "id",
+    header: "ID",
+    maxSize: 64,
+    cell: ({ row }) => <CopyValue value={row.original.permission.id} hiddenValue />,
+  },
   {
     accessorKey: "name",
     header: "Name",

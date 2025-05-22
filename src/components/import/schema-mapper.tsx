@@ -41,9 +41,7 @@ export function SchemaMapper({ data, file, initialMappings, databaseFields, onSu
       mappings: initialMappings,
     },
     validationSchema,
-    onSubmit: (values) => {
-      onSubmit(values);
-    },
+    onSubmit,
   });
 
   const updateFieldMapping = (index: number, field: Partial<FieldMapping>) => {
@@ -117,11 +115,15 @@ export function SchemaMapper({ data, file, initialMappings, databaseFields, onSu
                   {/* Constraints */}
                   <div className="col-span-3 flex justify-center flex-wrap gap-1">
                     {selectedField?.constraints && Object.keys(selectedField.constraints).length > 0 ? (
-                      Object.keys(selectedField.constraints).map((key) => (
-                        <Badge key={key} variant="outline" className="bg-amber-100 capitalize">
-                          {key}
-                        </Badge>
-                      ))
+                      Object.entries(selectedField.constraints).map(([key, value]) => {
+                        return value ? (
+                          <Badge key={key} variant="outline" className="bg-amber-100 capitalize">
+                            {key}
+                          </Badge>
+                        ) : (
+                          "-"
+                        );
+                      })
                     ) : (
                       <span className="text-muted-foreground">-</span>
                     )}

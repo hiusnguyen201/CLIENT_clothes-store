@@ -1,4 +1,4 @@
-import { Nullable, Optional } from "@/types/common";
+import { ImportError, Nullable, Optional } from "@/types/common";
 import { Category } from "@/types/category";
 import { BaseResponse, GetListParams, GetListResponseData } from "@/types/response";
 
@@ -15,16 +15,24 @@ export interface CategoryState {
     removeCategory: boolean;
     getListSubcategory: boolean;
     exportListCategoryExcel: boolean;
+    testImportListCategory: boolean;
+    liveImportListCategory: boolean;
   };
   newItem: Nullable<Category>;
   item: Nullable<Category>;
   list: Category[];
-  initializedList: boolean;
-  initializedSubList: boolean;
   listSub: Category[];
   totalCount: number;
   error: Nullable<string>;
   removedCategoryIds: string[];
+  summaryTestImport: {
+    totalRows: number;
+    validRows: number;
+    invalidRows: number;
+  };
+  recordsImported: number;
+  errorsTestImport: ImportError[];
+  errorsLiveImport: ImportError[];
 }
 
 /**
@@ -34,6 +42,32 @@ export type CheckCategoryNameExistPayload = {
   name: string;
 };
 export interface CheckCategoryNameExistResponse extends BaseResponse<boolean> {}
+
+/**
+ *  Import List Category
+ */
+export type ImportCategoryPayload = {
+  image: string;
+  name: string;
+  parentId: string;
+};
+export interface ImportListCategoryPayload {
+  categories: ImportCategoryPayload[];
+}
+export interface TestImportListCategoryDataResponse {
+  summary: {
+    totalRows: number;
+    validRows: number;
+    invalidRows: number;
+  };
+  errors: ImportError[];
+}
+export interface TestImportListCategoryResponse extends BaseResponse<TestImportListCategoryDataResponse> {}
+export interface LiveImportListCategoryDataResponse {
+  recordsImported: number;
+  errors: ImportError[];
+}
+export interface LiveImportListCategoryResponse extends BaseResponse<LiveImportListCategoryDataResponse> {}
 
 /**
  * Create Category

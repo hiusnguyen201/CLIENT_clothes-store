@@ -2,14 +2,12 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { exportListProductExcel } from "@/redux/product/product.thunk";
-import { GetListProductPayload, ProductState } from "@/redux/product/product.type";
+import { ProductState } from "@/redux/product/product.type";
 import { Download } from "lucide-react";
-import { PERMISSIONS } from "@/constants/permissions";
-import { usePermission } from "@/hooks/use-permission";
+import { useProductTableFilters } from "./ProductListTable/useProductTableFilters";
 
-export function ExportListProductExcelButton({ filters }: { filters: GetListProductPayload }) {
-  const can = usePermission();
-  if (!can(PERMISSIONS.EXPORT_PRODUCTS_EXCEL)) return null;
+export function ExportListProductExcelButton() {
+  const { filters } = useProductTableFilters();
 
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector<ProductState>((selector) => selector.product);

@@ -53,7 +53,14 @@ export function BusinessNotification() {
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger
+        asChild
+        onClick={() => {
+          if (inNotificationPage) {
+            setIsOpen(false);
+          }
+        }}
+      >
         <Button
           variant={inNotificationPage ? "outline" : "ghost"}
           size="icon"

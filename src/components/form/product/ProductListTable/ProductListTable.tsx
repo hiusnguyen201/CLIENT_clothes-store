@@ -2,7 +2,6 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useEffect } from "react";
 import { DataTable } from "@/components/data-table";
 import { getListProduct } from "@/redux/product/product.thunk";
-import { DataTableLoading } from "@/components/data-table/DataTableLoading";
 import { DataTablePagination } from "@/components/data-table/DataTablePagination";
 import { ProductFieldsSort, ProductState } from "@/redux/product/product.type";
 import { toast } from "@/hooks/use-toast";
@@ -10,11 +9,10 @@ import { useProductTableFilters } from "./useProductTableFilters";
 import { SearchFormField } from "@/components/form-fields/SearchFormFIeld";
 import { productColumns } from "./product-columns";
 import { ProductFilterSidebarForm } from "./ProductFilterSidebarForm";
-import { ExportListProductExcelButton } from "../ExportListProductExcelButton";
 
 export function ProductListTable() {
   const dispatch = useAppDispatch();
-  const { list, totalCount, loading, initializedList, removedProductIds, newItem } = useAppSelector<ProductState>(
+  const { list, totalCount, loading, removedProductIds, newItem } = useAppSelector<ProductState>(
     (state) => state.product
   );
   const { filters, handlePageChange, handleLimitChange, handleKeywordChange, handleFiltersChange, handleSortChange } =
@@ -33,7 +31,7 @@ export function ProductListTable() {
   }, [filters, dispatch, removedProductIds, newItem]);
 
   return (
-    <DataTableLoading initialized={initializedList} className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-6 w-full">
       <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-3">
         <SearchFormField
           name="keyword"
@@ -55,10 +53,6 @@ export function ProductListTable() {
         />
       </div>
 
-      <div className="flex items-center justify-end">
-        <ExportListProductExcelButton filters={filters} />
-      </div>
-
       <DataTable
         data={list}
         onSortingChange={(sorting) => {
@@ -78,6 +72,6 @@ export function ProductListTable() {
         onLimitChange={handleLimitChange}
         onPageChange={handlePageChange}
       />
-    </DataTableLoading>
+    </div>
   );
 }

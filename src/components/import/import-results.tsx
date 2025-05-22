@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { ExcelData, ValidationResult, ImportResult } from "@/components/import/types";
 import { ValidationSummary } from "@/components/import/validation-summary";
 import { ImportSummary } from "@/components/import/import-summary";
+import { ImportResultsSkeleton } from "./import-results-skeleton";
 
 interface ImportResultsProps {
   file: File | null;
@@ -14,6 +15,8 @@ interface ImportResultsProps {
   onReset: () => void;
   onRealImport: () => void;
   tab: "test" | "real";
+  loadingTestImport?: boolean;
+  loadingLiveImport?: boolean;
 }
 
 export function ImportResults({
@@ -24,8 +27,11 @@ export function ImportResults({
   onBack,
   onReset,
   onRealImport,
+  loadingTestImport,
+  loadingLiveImport,
   tab = "test",
 }: ImportResultsProps) {
+  const rows = importResults?.errors.map((error) => error.row) || [];
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -46,7 +52,8 @@ export function ImportResults({
         </TabsList>
 
         <TabsContent value="test" className="space-y-4 mt-4">
-          {testResults && <ValidationSummary results={testResults} />}
+          {testResults && !loadingTestImport && <ValidationSummary results={testResults} />}
+          {loadingTestImport && <ImportResultsSkeleton />}
 
           <div className="flex justify-between">
             <Button variant="outline" onClick={onBack}>
@@ -58,7 +65,18 @@ export function ImportResults({
         </TabsContent>
 
         <TabsContent value="real" className="space-y-4 mt-4">
-          {importResults && <ImportSummary results={importResults} totalRows={data?.rows.length || 0} />}
+          {importResults && !loadingLiveImport && (
+            <ImportSummary
+              results={importResults}
+              totalRows={data?.rows.length || 0}
+              successRows={
+                data?.rows
+                  .filter((_, index) => !rows.includes(index + 2))
+                  .map((item, index) => ({ data: item, rowNumber: index + 2 })) || []
+              }
+            />
+          )}
+          {loadingLiveImport && <ImportResultsSkeleton />}
 
           <div className="flex justify-between">
             <Button variant="outline" onClick={onBack}>

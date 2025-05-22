@@ -18,18 +18,22 @@ import {
   ValidationResult,
 } from "@/components/import/types";
 
-export function FileExcelImportProcess({
+export function FileExcelImportProcess<T extends Record<string, any>>({
   onClickTestImport,
   onClickLiveImport,
   testResults,
   importResults,
   databaseFields = [],
+  loadingTestImport,
+  loadingLiveImport,
 }: {
   onClickTestImport: (data: Record<string, any>[]) => void;
   onClickLiveImport: (data: Record<string, any>[]) => void;
   testResults: ValidationResult;
   importResults: ImportResult;
-  databaseFields: DatabaseField[];
+  databaseFields: DatabaseField<T>[];
+  loadingTestImport?: boolean;
+  loadingLiveImport?: boolean;
 }) {
   const [currentStep, setCurrentStep] = useState<ImportStep>("upload");
   const [file, setFile] = useState<File | null>(null);
@@ -88,10 +92,23 @@ export function FileExcelImportProcess({
         }
 
         // Extract headers and rows
-        const headers = jsonData[0] as string[];
-        setData({ headers, rows: jsonData.slice(1) });
+        const headers = (jsonData[0] as string[]).filter(Boolean);
+        const rows = jsonData.slice(1).map((row) => (row as any[]).filter(Boolean));
 
-        setFieldMappings(headers.map((h) => ({ excelColumn: h, dbField: "" })));
+        setData({ headers, rows });
+
+        setFieldMappings(
+          headers.map((h) => {
+            const dbField =
+              databaseFields.find((f) => String(f.name).toLowerCase().includes(h.toLowerCase().replace(/ /g, "")))
+                ?.name || "";
+
+            return {
+              excelColumn: h,
+              dbField: dbField as string,
+            };
+          })
+        );
 
         setIsLoading(false);
         setCurrentStep("mapping");
@@ -149,7 +166,7 @@ export function FileExcelImportProcess({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6 w-full">
       <ImportSteps currentStep={currentStep} />
 
       {error && (
@@ -189,6 +206,8 @@ export function FileExcelImportProcess({
           tab={tab}
           file={file}
           data={data}
+          loadingTestImport={loadingTestImport}
+          loadingLiveImport={loadingLiveImport}
           testResults={{
             rowsWithErrors: testResults.rowsWithErrors || 0,
             totalRows: testResults.totalRows || 0,

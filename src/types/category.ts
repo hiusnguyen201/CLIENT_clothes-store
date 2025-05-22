@@ -8,4 +8,6 @@ export type Category = {
   level: number;
   parent: Nullable<Category>;
   children: Category[];
+  createdAt: Date;
+  updatedAt: Date;
 };

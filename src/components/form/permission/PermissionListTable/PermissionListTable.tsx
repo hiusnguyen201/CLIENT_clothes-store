@@ -2,18 +2,16 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useEffect } from "react";
 import { DataTable } from "@/components/data-table";
 import { getListPermission } from "@/redux/permission/permission.thunk";
-import { DataTableLoading } from "@/components/data-table/DataTableLoading";
 import { DataTablePagination } from "@/components/data-table/DataTablePagination";
 import { PermissionFieldsSort, PermissionState } from "@/redux/permission/permission.type";
 import { toast } from "@/hooks/use-toast";
 import { usePermissionTableFilters } from "./usePermissionTableFilters";
 import { SearchFormField } from "@/components/form-fields/SearchFormFIeld";
 import { permissionColumns } from "./permission-columns";
-import { ExportListPermissionExcelButton } from "../ExportListPermissionExcelButton";
 
 export function PermissionListTable() {
   const dispatch = useAppDispatch();
-  const { list, totalCount, loading, initializedList } = useAppSelector<PermissionState>((state) => state.permission);
+  const { list, totalCount, loading } = useAppSelector<PermissionState>((state) => state.permission);
   const { filters, handlePageChange, handleLimitChange, handleKeywordChange, handleSortChange } =
     usePermissionTableFilters();
 
@@ -30,7 +28,7 @@ export function PermissionListTable() {
   }, [filters, dispatch]);
 
   return (
-    <DataTableLoading initialized={initializedList} className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-6 w-full">
       <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-3">
         <SearchFormField
           name="keyword"
@@ -39,10 +37,6 @@ export function PermissionListTable() {
           onValueChange={handleKeywordChange}
           placeholder="Enter a keyword"
         />
-      </div>
-
-      <div className="flex items-center justify-end">
-        <ExportListPermissionExcelButton filters={filters} />
       </div>
 
       <DataTable
@@ -63,6 +57,6 @@ export function PermissionListTable() {
         onLimitChange={handleLimitChange}
         onPageChange={handlePageChange}
       />
-    </DataTableLoading>
+    </div>
   );
 }

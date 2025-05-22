@@ -2,19 +2,17 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useEffect } from "react";
 import { DataTable } from "@/components/data-table";
 import { getListCustomer } from "@/redux/customer/customer.thunk";
-import { DataTableLoading } from "@/components/data-table/DataTableLoading";
 import { DataTablePagination } from "@/components/data-table/DataTablePagination";
 import { CustomerFieldsSort, CustomerState } from "@/redux/customer/customer.type";
 import { toast } from "@/hooks/use-toast";
 import { useCustomerTableFilters } from "./useCustomerTableFilters";
 import { SearchFormField } from "@/components/form-fields/SearchFormFIeld";
-import { ExportListCustomerExcelButton } from "@/components/form/customer/ExportListCustomerExcelButton";
 import { CustomerFilterSidebarForm } from "./CustomerFilterSidebarForm";
 import { customerColumns } from "./customer-columns";
 
 export function CustomerListTable() {
   const dispatch = useAppDispatch();
-  const { list, totalCount, loading, initializedList, removedCustomerIds, newItem } = useAppSelector<CustomerState>(
+  const { list, totalCount, loading, removedCustomerIds, newItem } = useAppSelector<CustomerState>(
     (state) => state.customer
   );
   const { filters, handlePageChange, handleLimitChange, handleKeywordChange, handleSortChange, handleFiltersChange } =
@@ -33,7 +31,7 @@ export function CustomerListTable() {
   }, [filters, dispatch, removedCustomerIds, newItem]);
 
   return (
-    <DataTableLoading initialized={initializedList} className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-6 w-full">
       <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-3">
         <SearchFormField
           name="keyword"
@@ -50,10 +48,6 @@ export function CustomerListTable() {
             gender: filters.gender,
           }}
         />
-      </div>
-
-      <div className="flex items-center justify-end">
-        <ExportListCustomerExcelButton filters={filters} />
       </div>
 
       <DataTable
@@ -75,6 +69,6 @@ export function CustomerListTable() {
         onLimitChange={handleLimitChange}
         onPageChange={handlePageChange}
       />
-    </DataTableLoading>
+    </div>
   );
 }

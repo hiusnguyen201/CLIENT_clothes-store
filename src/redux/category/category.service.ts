@@ -16,7 +16,22 @@ import {
   GetListSubcategoryPayload,
   GetListSubcategoryResponse,
   ExportListCategoryExcelResponse,
+  TestImportListCategoryResponse,
+  ImportListCategoryPayload,
+  LiveImportListCategoryResponse,
 } from "@/redux/category/category.type";
+
+export const testImportListCategoryExcelService = async (
+  payload: ImportListCategoryPayload
+): Promise<TestImportListCategoryResponse> => {
+  return await apiInstance.post(`/categories/test-import`, payload);
+};
+
+export const liveImportListCategoryExcelService = async (
+  payload: ImportListCategoryPayload
+): Promise<LiveImportListCategoryResponse> => {
+  return await apiInstance.post(`/categories/live-import`, payload);
+};
 
 export const checkCategoryNameExistService = async (
   payload: CheckCategoryNameExistPayload

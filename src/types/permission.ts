@@ -5,4 +5,6 @@ export type Permission = {
   name: string;
   description: string;
   module: string;
+  createdAt: Date;
+  updatedAt: Date;
 };

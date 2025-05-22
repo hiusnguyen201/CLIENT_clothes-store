@@ -7,6 +7,8 @@ import {
   RemoveProductResponse,
   ProductState,
   EditProductVariantsResponse,
+  TestImportListProductResponse,
+  LiveImportListProductResponse,
 } from "@/redux/product/product.type";
 import {
   getListProduct,
@@ -17,6 +19,8 @@ import {
   checkProductNameExist,
   editProductVariants,
   exportListProductExcel,
+  liveImportListProduct,
+  testImportListProduct,
 } from "@/redux/product/product.thunk";
 
 const initialState: ProductState = {
@@ -29,14 +33,23 @@ const initialState: ProductState = {
     editProductVariants: false,
     removeProduct: false,
     exportListProductExcel: false,
+    testImportListProduct: false,
+    liveImportListProduct: false,
   },
   newItem: null,
   item: null,
-  initializedList: false,
   list: [],
   totalCount: 0,
   error: null,
   removedProductIds: [],
+  summaryTestImport: {
+    totalRows: 0,
+    validRows: 0,
+    invalidRows: 0,
+  },
+  errorsTestImport: [],
+  errorsLiveImport: [],
+  recordsImported: 0,
 };
 
 const productSlice = createSlice({
@@ -44,6 +57,56 @@ const productSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder: ActionReducerMapBuilder<ProductState>) => {
+    builder
+      // Test Import List Product
+      .addCase(testImportListProduct.pending, (state: Draft<ProductState>) => {
+        state.loading.testImportListProduct = true;
+        state.error = null;
+      })
+      .addCase(
+        testImportListProduct.fulfilled,
+        (state: Draft<ProductState>, action: PayloadAction<TestImportListProductResponse>) => {
+          const { data } = action.payload;
+          state.loading.testImportListProduct = false;
+          state.error = null;
+          state.errorsTestImport = data.errors;
+          state.summaryTestImport = data.summary;
+        }
+      )
+      .addCase(testImportListProduct.rejected, (state: Draft<ProductState>, action: PayloadAction<any>) => {
+        state.loading.testImportListProduct = false;
+        state.error = action.payload as string;
+        state.errorsTestImport = [];
+        state.summaryTestImport = {
+          invalidRows: 0,
+          totalRows: 0,
+          validRows: 0,
+        };
+      });
+
+    builder
+      // Live Import List Product
+      .addCase(liveImportListProduct.pending, (state: Draft<ProductState>) => {
+        state.loading.liveImportListProduct = true;
+        state.error = null;
+      })
+      .addCase(
+        liveImportListProduct.fulfilled,
+        (state: Draft<ProductState>, action: PayloadAction<LiveImportListProductResponse>) => {
+          const { data } = action.payload;
+          state.loading.liveImportListProduct = false;
+          state.error = null;
+          state.errorsLiveImport = data.errors;
+          state.recordsImported = data.recordsImported;
+        }
+      )
+      .addCase(liveImportListProduct.rejected, (state: Draft<ProductState>, action: PayloadAction<any>) => {
+        state.loading.liveImportListProduct = false;
+        state.error = action.payload as string;
+        state.errorsLiveImport = [];
+        state.recordsImported = 0;
+      });
+
     // Check Email Exist
     builder
       .addCase(checkProductNameExist.pending, (state) => {
@@ -91,7 +154,6 @@ const productSlice = createSlice({
           state.error = null;
           state.list = data.list;
           state.totalCount = data.totalCount;
-          state.initializedList = true;
         }
       )
       .addCase(getListProduct.rejected, (state: Draft<ProductState>, action: PayloadAction<any>) => {
@@ -99,7 +161,6 @@ const productSlice = createSlice({
         state.error = action.payload as string;
         state.list = [];
         state.totalCount = 0;
-        state.initializedList = true;
       });
 
     builder

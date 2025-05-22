@@ -1,4 +1,4 @@
-import { Nullable, Optional } from "@/types/common";
+import { ImportError, Nullable, Optional } from "@/types/common";
 import { BaseResponse, GetListParams, GetListResponseData } from "@/types/response";
 import { Order, ORDER_STATUS } from "@/types/order";
 import { ONLINE_PAYMENT_METHOD } from "@/types/payment";
@@ -20,15 +20,55 @@ export interface OrderState {
     createShipOrder: boolean;
     processingOrder: boolean;
     exportListOrderExcel: boolean;
+    testImportListOrder: boolean;
+    liveImportListOrder: boolean;
   };
   newItem: Nullable<Order>;
   item: Nullable<Order>;
-  initializedList: boolean;
   list: Order[];
   totalCount: number;
   error: Nullable<string>;
   removedOrderIds: string[];
+  summaryTestImport: {
+    totalRows: number;
+    validRows: number;
+    invalidRows: number;
+  };
+  recordsImported: number;
+  errorsTestImport: ImportError[];
+  errorsLiveImport: ImportError[];
 }
+
+/**
+ *  Import List Order
+ */
+export type ImportOrderPayload = {
+  customerEmail: string;
+  district: string;
+  province: string;
+  ward: string;
+  address: string;
+  productSKU: string;
+  quantity: number;
+  paymentMethod: ONLINE_PAYMENT_METHOD;
+};
+export interface ImportListOrderPayload {
+  orders: ImportOrderPayload[];
+}
+export interface TestImportListOrderDataResponse {
+  summary: {
+    totalRows: number;
+    validRows: number;
+    invalidRows: number;
+  };
+  errors: ImportError[];
+}
+export interface TestImportListOrderResponse extends BaseResponse<TestImportListOrderDataResponse> {}
+export interface LiveImportListOrderDataResponse {
+  recordsImported: number;
+  errors: ImportError[];
+}
+export interface LiveImportListOrderResponse extends BaseResponse<LiveImportListOrderDataResponse> {}
 
 /**
  * Create Order

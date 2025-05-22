@@ -16,8 +16,15 @@ import { RemoveCategoryDialogForm } from "@/components/form/category/RemoveCateg
 import { Image } from "@/components/Image";
 import { PERMISSIONS } from "@/constants/permissions";
 import { usePermission } from "@/hooks/use-permission";
+import { CopyValue } from "@/components/CopyValue";
 
 export const categoryColumns: ColumnDef<Category, any>[] = [
+  {
+    id: "id",
+    header: "ID",
+    maxSize: 64,
+    cell: ({ row }) => <CopyValue value={row.original.id} hiddenValue />,
+  },
   {
     accessorKey: "name",
     header: "Name",

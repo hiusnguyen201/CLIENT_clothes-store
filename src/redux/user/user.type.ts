@@ -1,4 +1,4 @@
-import { Nullable, Optional } from "@/types/common";
+import { ImportError, Nullable, Optional } from "@/types/common";
 import { Permission } from "@/types/permission";
 import { BaseResponse, GetListParams, GetListResponseData } from "@/types/response";
 import { GENDER, User } from "@/types/user";
@@ -24,7 +24,6 @@ export interface UserState {
   newItem: Nullable<User>;
   item: Nullable<User>;
   list: User[];
-  initializedList: boolean;
   totalCount: number;
   error: Nullable<string>;
   listUserPermissions: Permission[];
@@ -38,8 +37,6 @@ export interface UserState {
   errorsTestImport: ImportError[];
   errorsLiveImport: ImportError[];
 }
-
-export type ImportError = { row: number; field: string; message: string };
 
 /**
  * Create User
@@ -85,6 +82,7 @@ export type ImportUserPayload = {
   email: string;
   phone: string;
   gender: GENDER | string;
+  roleId: Nullable<string>;
 };
 export interface ImportListUserPayload {
   users: ImportUserPayload[];

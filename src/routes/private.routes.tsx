@@ -26,6 +26,11 @@ import { ForbiddenPage } from "@/pages/errors/ForbiddenPage";
 import { CreateUserPage } from "@/pages/users/CreateUserPage";
 import { ListNotificationPage } from "@/pages/notifications/ListNotificationPage";
 import { ImportUserPage } from "@/pages/users/ImportUserPage";
+import { ImportRolePage } from "@/pages/roles/ImportRolePage";
+import { ImportCustomerPage } from "@/pages/customers/ImportCustomerPage";
+import { ImportCategoryPage } from "@/pages/categories/ImportCategoryPage";
+import { ImportProductPage } from "@/pages/products/ImportProductPage";
+import { ImportOrderPage } from "@/pages/orders/ImportOrderPage";
 
 export const privateRoutes: RouteObject[] = [
   {
@@ -41,6 +46,14 @@ export const privateRoutes: RouteObject[] = [
         element: (
           <PermissionGuard permission={PERMISSIONS.READ_PRODUCTS}>
             <ListProductPage />
+          </PermissionGuard>
+        ),
+      },
+      {
+        path: "/products/import",
+        element: (
+          <PermissionGuard permission={PERMISSIONS.IMPORT_PRODUCTS_EXCEL}>
+            <ImportProductPage />
           </PermissionGuard>
         ),
       },
@@ -77,6 +90,14 @@ export const privateRoutes: RouteObject[] = [
         ),
       },
       {
+        path: "/categories/import",
+        element: (
+          <PermissionGuard permission={PERMISSIONS.IMPORT_CATEGORIES_EXCEL}>
+            <ImportCategoryPage />
+          </PermissionGuard>
+        ),
+      },
+      {
         path: "/categories/:categoryId/settings",
         element: (
           <PermissionGuard permission={PERMISSIONS.READ_DETAILS_CATEGORY}>
@@ -101,6 +122,14 @@ export const privateRoutes: RouteObject[] = [
         ),
       },
       {
+        path: "/customers/import",
+        element: (
+          <PermissionGuard permission={PERMISSIONS.IMPORT_CUSTOMERS_EXCEL}>
+            <ImportCustomerPage />
+          </PermissionGuard>
+        ),
+      },
+      {
         path: "/customers/:customerId/settings",
         element: (
           <PermissionGuard permission={PERMISSIONS.READ_DETAILS_CUSTOMER}>
@@ -118,7 +147,11 @@ export const privateRoutes: RouteObject[] = [
       },
       {
         path: "/users/import",
-        element: <ImportUserPage />,
+        element: (
+          <PermissionGuard permission={PERMISSIONS.IMPORT_USERS_EXCEL}>
+            <ImportUserPage />
+          </PermissionGuard>
+        ),
       },
       {
         path: "/users/create",
@@ -145,6 +178,14 @@ export const privateRoutes: RouteObject[] = [
         ),
       },
       {
+        path: "/orders/import",
+        element: (
+          <PermissionGuard permission={PERMISSIONS.IMPORT_ORDERS_EXCEL}>
+            <ImportOrderPage />
+          </PermissionGuard>
+        ),
+      },
+      {
         path: "/orders/create",
         element: (
           <PermissionGuard permission={PERMISSIONS.CREATE_ORDER}>
@@ -165,6 +206,14 @@ export const privateRoutes: RouteObject[] = [
         element: (
           <PermissionGuard permission={PERMISSIONS.READ_ROLES}>
             <ListRolePage />
+          </PermissionGuard>
+        ),
+      },
+      {
+        path: "/roles/import",
+        element: (
+          <PermissionGuard permission={PERMISSIONS.IMPORT_ROLES_EXCEL}>
+            <ImportRolePage />
           </PermissionGuard>
         ),
       },

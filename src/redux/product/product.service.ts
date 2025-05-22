@@ -16,7 +16,22 @@ import {
   EditProductVariantsPayload,
   EditProductVariantsResponse,
   ExportListProductExcelResponse,
+  ImportListProductPayload,
+  TestImportListProductResponse,
+  LiveImportListProductResponse,
 } from "@/redux/product/product.type";
+
+export const testImportListProductExcelService = async (
+  payload: ImportListProductPayload
+): Promise<TestImportListProductResponse> => {
+  return await apiInstance.post(`/products/test-import`, payload);
+};
+
+export const liveImportListProductExcelService = async (
+  payload: ImportListProductPayload
+): Promise<LiveImportListProductResponse> => {
+  return await apiInstance.post(`/products/live-import`, payload);
+};
 
 export const checkProductNameExistService = async (
   payload: CheckProductNameExistPayload

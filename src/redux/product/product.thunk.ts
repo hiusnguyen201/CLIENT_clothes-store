@@ -7,7 +7,9 @@ import {
   exportListProductExcelService,
   getListProductService,
   getProductService,
+  liveImportListProductExcelService,
   removeProductService,
+  testImportListProductExcelService,
 } from "@/redux/product/product.service";
 import {
   CheckProductNameExistPayload,
@@ -23,11 +25,42 @@ import {
   GetListProductResponse,
   GetProductPayload,
   GetProductResponse,
+  ImportListProductPayload,
+  LiveImportListProductResponse,
   RemoveProductPayload,
   RemoveProductResponse,
+  TestImportListProductResponse,
 } from "@/redux/product/product.type";
 import { ThunkApiConfig } from "@/types/thunk-api";
 import { downloadFileBlob } from "@/utils/object";
+
+export const testImportListProduct = createAsyncThunk<
+  TestImportListProductResponse,
+  ImportListProductPayload,
+  ThunkApiConfig
+>("product/test-import-list-product", async (payload, { rejectWithValue }) => {
+  try {
+    const response: TestImportListProductResponse = await testImportListProductExcelService(payload);
+    return response;
+  } catch (e: any) {
+    const message: string = e?.response?.data?.message || e.message || e.toString();
+    return rejectWithValue(message);
+  }
+});
+
+export const liveImportListProduct = createAsyncThunk<
+  LiveImportListProductResponse,
+  ImportListProductPayload,
+  ThunkApiConfig
+>("product/live-import-list-product", async (payload, { rejectWithValue }) => {
+  try {
+    const response: LiveImportListProductResponse = await liveImportListProductExcelService(payload);
+    return response;
+  } catch (e: any) {
+    const message: string = e?.response?.data?.message || e.message || e.toString();
+    return rejectWithValue(message);
+  }
+});
 
 export const checkProductNameExist = createAsyncThunk<
   CheckProductNameExistResponse,

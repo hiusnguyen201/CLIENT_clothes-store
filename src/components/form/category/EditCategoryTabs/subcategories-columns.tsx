@@ -8,8 +8,15 @@ import { Badge } from "@/components/ui/badge";
 import { Image } from "@/components/Image";
 import { usePermission } from "@/hooks/use-permission";
 import { PERMISSIONS } from "@/constants/permissions";
+import { CopyValue } from "@/components/CopyValue";
 
 export const subcategoriesColumns: ColumnDef<Category, any>[] = [
+  {
+    id: "id",
+    header: "ID",
+    maxSize: 64,
+    cell: ({ row }) => <CopyValue value={row.original.id} hiddenValue />,
+  },
   {
     id: "name",
     header: "Name",

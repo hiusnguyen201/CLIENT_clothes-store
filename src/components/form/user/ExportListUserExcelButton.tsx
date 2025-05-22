@@ -4,13 +4,14 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { exportListUserExcel } from "@/redux/user/user.thunk";
 import { UserState } from "@/redux/user/user.type";
 import { Download } from "lucide-react";
-import { GetListUserPayload } from "@/redux/user/user.type";
 import { usePermission } from "@/hooks/use-permission";
 import { PERMISSIONS } from "@/constants/permissions";
+import { useUserTableFilters } from "./UserListTable/useUserTableFilters";
 
-export function ExportListUserExcelButton({ filters }: { filters: GetListUserPayload }) {
+export function ExportListUserExcelButton() {
   const can = usePermission();
   if (!can(PERMISSIONS.EXPORT_USERS_EXCEL)) return null;
+  const { filters } = useUserTableFilters();
 
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector<UserState>((selector) => selector.user);
