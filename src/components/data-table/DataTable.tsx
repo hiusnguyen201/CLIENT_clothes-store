@@ -73,7 +73,7 @@ export function DataTable<TData>({
   }
 
   return (
-    <div className="overflow-x-auto flex flex-col w-full relative max-h-[630px]">
+    <div className={cn("overflow-x-auto flex flex-col w-full relative", data.length > 15 ? "max-h-[630px]" : "")}>
       <TableContainer className={cn(className)}>
         <TableHeader className={cn("sticky top-0 bg-white border-b")}>
           {table.getHeaderGroups().map((headerGroup) => (

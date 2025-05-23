@@ -54,9 +54,13 @@ export enum PERMISSIONS {
   PROCESSING_ORDER = "processing:order",
   CREATE_SHIP_ORDER = "create-ship:order",
 
+  //   Payment
+  READ_PAYMENTS = "read:payments",
+
   // Export
   EXPORT_USERS_EXCEL = "export:users:excel",
   EXPORT_CUSTOMERS_EXCEL = "export:customers:excel",
+  EXPORT_PAYMENTS_EXCEL = "export:payments:excel",
   EXPORT_PERMISSIONS_EXCEL = "export:permissions:excel",
   EXPORT_PRODUCTS_EXCEL = "export:products:excel",
   EXPORT_CATEGORIES_EXCEL = "export:categories:excel",

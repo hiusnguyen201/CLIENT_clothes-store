@@ -14,7 +14,7 @@ export function ListOrderPage() {
     <ContentWrapper>
       <Heading
         title="Orders"
-        description="An easy to use UI to help administrators manage order identities including password resets, creating and provisioning and removing orders."
+        description="An easy to use UI to help administrators manage order identities including creating and provisioning and removing orders."
         actionRight={
           can(PERMISSIONS.CREATE_ORDER) && (
             <Link to="/orders/create">

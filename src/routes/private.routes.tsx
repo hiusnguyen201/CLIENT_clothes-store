@@ -32,6 +32,7 @@ import { ImportCategoryPage } from "@/pages/categories/ImportCategoryPage";
 import { ImportProductPage } from "@/pages/products/ImportProductPage";
 import { ImportOrderPage } from "@/pages/orders/ImportOrderPage";
 import { ActivityPage } from "@/pages/activity/ActivityPage";
+import { ListPaymentPage } from "@/pages/payments";
 
 export const privateRoutes: RouteObject[] = [
   {
@@ -176,6 +177,14 @@ export const privateRoutes: RouteObject[] = [
         element: (
           <PermissionGuard permission={PERMISSIONS.READ_ORDERS}>
             <ListOrderPage />
+          </PermissionGuard>
+        ),
+      },
+      {
+        path: "/payments",
+        element: (
+          <PermissionGuard permission={PERMISSIONS.READ_PAYMENTS}>
+            <ListPaymentPage />
           </PermissionGuard>
         ),
       },

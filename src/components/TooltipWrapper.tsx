@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { type LucideIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface TooltipWrapperProps {
   /**
@@ -53,11 +54,16 @@ export function TooltipWrapper({
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger asChild className="cursor-pointer">
-          <Button variant="ghost" size="icon" className="rounded-full w-auto h-auto [&_svg]:size-5">
+          <Button variant="ghost" size="icon" className="rounded-full w-8 h-8">
             {children}
           </Button>
         </TooltipTrigger>
-        <TooltipContent side={side} align={align} {...props} className={className}>
+        <TooltipContent
+          side={side}
+          align={align}
+          {...props}
+          className={cn("bg-black/90 text-white max-w-[300px]", className)}
+        >
           {content}
         </TooltipContent>
       </Tooltip>

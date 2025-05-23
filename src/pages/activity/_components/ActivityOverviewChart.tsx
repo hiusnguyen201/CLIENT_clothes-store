@@ -27,7 +27,7 @@ export function ActivityOverviewChart() {
         <h2 className="text-lg font-semibold flex items-center gap-3">
           Daily Active Users{" "}
           <TooltipWrapper
-            className="max-w-[300px] bg-black/90 text-white"
+            className=""
             content="Unique users with a successful authentication or authorization activity."
           >
             <Info />

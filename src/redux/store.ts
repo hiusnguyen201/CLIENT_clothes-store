@@ -12,6 +12,7 @@ import productReducer from "./product/product.slice";
 import optionReducer from "./option/option.slice";
 import divisionReducer from "./division/division.slice";
 import reportReducer from "./report/report.slice";
+import paymentReducer from "./payment/payment.slice";
 
 export const store = configureStore({
   reducer: {
@@ -27,6 +28,7 @@ export const store = configureStore({
     product: productReducer,
     option: optionReducer,
     report: reportReducer,
+    payment: paymentReducer,
   },
 });
 
