@@ -32,7 +32,7 @@ export function DashboardPage() {
           <SelectFormField
             name="compareTo"
             value={compareTo}
-            onValueChange={(value) => setCompareTo(value)}
+            onValueChange={(value) => setCompareTo(value ? value : COMPARISON_VALUES.YESTERDAY)}
             options={Object.values(COMPARISON_VALUES).map((item) => ({ title: item, value: item }))}
           />
         </div>

@@ -53,11 +53,11 @@ export function TooltipWrapper({
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger asChild className="cursor-pointer">
-          <Button variant="ghost" size="icon" className="rounded-full w-8 h-8">
+          <Button variant="ghost" size="icon" className="rounded-full w-auto h-auto [&_svg]:size-5">
             {children}
           </Button>
         </TooltipTrigger>
-        <TooltipContent side={side} align={align} {...props}>
+        <TooltipContent side={side} align={align} {...props} className={className}>
           {content}
         </TooltipContent>
       </Tooltip>

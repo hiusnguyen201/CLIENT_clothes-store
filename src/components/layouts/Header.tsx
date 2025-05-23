@@ -4,6 +4,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { BusinessNotification } from "@/components/layouts/BusinessNotification";
 import { useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function Header() {
   const { user } = useAuth();
@@ -17,11 +19,20 @@ export function Header() {
           open ? "w-[var(--sidebar-width)]" : "w-[var(--sidebar-width-icon)]"
         )}
       >
-        <img src={open ? "/assets/logo3.svg" : "/assets/logo4.svg"} alt="logo" className="h-full w-full p-2" />
+        <img
+          src={open ? "/public/assets/logo/logo3.svg" : "/public/assets/logo/logo4.svg"}
+          alt="logo"
+          className="h-full w-full p-2"
+        />
       </Link>
 
       {user && (
         <div className="flex items-center gap-3">
+          <Link to="/messages" className="flex items-center">
+            <Button variant="ghost" size="icon" className="text-white hover:text-black w-8 h-8">
+              <MessageCircle />
+            </Button>
+          </Link>
           <BusinessNotification />
           <NavUser user={user} />
         </div>

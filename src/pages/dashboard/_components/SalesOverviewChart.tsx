@@ -3,7 +3,7 @@ import { ReportState } from "@/redux/report/report.type";
 import { useEffect, useState } from "react";
 import { getSalesReport } from "@/redux/report/report.thunk";
 import { Card } from "@/components/ui/card";
-import { StatsChart } from "./StatsChart";
+import { SalesStatsChart } from "./SalesStatsChart";
 import { SALE_VALUES } from "@/types/report";
 import { SelectFormField } from "@/components/form-fields";
 import { Spinner } from "@/components/spinner";
@@ -11,7 +11,7 @@ import { Spinner } from "@/components/spinner";
 export function SalesOverviewChart() {
   const dispatch = useAppDispatch();
   const { salesReport, loading } = useAppSelector<ReportState>((selector) => selector.report);
-  const [type, setType] = useState<SALE_VALUES>(SALE_VALUES.LAST_24_HOURS);
+  const [type, setType] = useState<SALE_VALUES>(SALE_VALUES.LAST_WEEK);
 
   useEffect(() => {
     (async () => {
@@ -29,12 +29,12 @@ export function SalesOverviewChart() {
             className="min-w-[140px]"
             name="type"
             value={type}
-            onValueChange={(value) => setType(value)}
+            onValueChange={(value) => setType(value || SALE_VALUES.LAST_WEEK)}
             options={Object.values(SALE_VALUES).map((item) => ({ title: item.replace(/-/g, " "), value: item }))}
           />
         </div>
       </div>
-      <StatsChart type={type} sales={salesReport} />
+      <SalesStatsChart type={type} sales={salesReport} />
     </Card>
   );
 }

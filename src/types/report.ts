@@ -12,6 +12,13 @@ export type CustomerReport = {
   percentage: number;
 };
 
+export type UserReport = {
+  totalUserOverall: number;
+  currentCountNewUser: number;
+  previousCountNewUser: number;
+  percentage: number;
+};
+
 export type RevenueReport = {
   totalRevenueOverall: number;
   currentTotalRevenue: number;
@@ -23,6 +30,12 @@ export type SaleReport = {
   startDate: Date;
   endDate: Date;
   sales: number;
+};
+
+export type ActivityReport = {
+  startDate: Date;
+  endDate: Date;
+  amount: number;
 };
 
 export enum COMPARISON_VALUES {
@@ -38,4 +51,11 @@ export enum SALE_VALUES {
   LAST_MONTH = "last-month",
   LAST_6_MONTH = "last-6-month",
   YEAR = "year",
+}
+
+export enum ACTIVITY_VALUES {
+  LAST_7_DAYS = "last-7-days",
+  LAST_14_DAYS = "last-14-days",
+  LAST_30_DAYS = "last-30-days",
+  LAST_60_DAYS = "last-60-days",
 }

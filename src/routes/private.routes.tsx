@@ -31,6 +31,7 @@ import { ImportCustomerPage } from "@/pages/customers/ImportCustomerPage";
 import { ImportCategoryPage } from "@/pages/categories/ImportCategoryPage";
 import { ImportProductPage } from "@/pages/products/ImportProductPage";
 import { ImportOrderPage } from "@/pages/orders/ImportOrderPage";
+import { ActivityPage } from "@/pages/activity/ActivityPage";
 
 export const privateRoutes: RouteObject[] = [
   {
@@ -41,6 +42,7 @@ export const privateRoutes: RouteObject[] = [
     ),
     children: [
       { path: "/dashboard", element: <DashboardPage /> },
+      { path: "/activity", element: <ActivityPage /> },
       {
         path: "/products",
         element: (

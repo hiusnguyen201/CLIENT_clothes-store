@@ -1,6 +1,16 @@
 import { Nullable } from "@/types/common";
 import { BaseResponse } from "@/types/response";
-import { COMPARISON_VALUES, CustomerReport, OrderReport, RevenueReport, SALE_VALUES, SaleReport } from "@/types/report";
+import {
+  ACTIVITY_VALUES,
+  ActivityReport,
+  COMPARISON_VALUES,
+  CustomerReport,
+  OrderReport,
+  RevenueReport,
+  SALE_VALUES,
+  SaleReport,
+  UserReport,
+} from "@/types/report";
 import { ProductVariant } from "@/types/product";
 import { Order } from "@/types/order";
 
@@ -9,22 +19,33 @@ import { Order } from "@/types/order";
  */
 export interface ReportState {
   loading: {
+    getUserReport: boolean;
     getCustomerReport: boolean;
     getOrderReport: boolean;
     getRevenueReport: boolean;
     getTopProductVariants: boolean;
     getSalesReport: boolean;
     getRecentOrders: boolean;
+    getActivityReport: boolean;
   };
+  userReport: Nullable<UserReport>;
   customerReport: Nullable<CustomerReport>;
   orderReport: Nullable<OrderReport>;
   revenueReport: Nullable<RevenueReport>;
   topProductVariants: ProductVariant[];
   salesReport: SaleReport[];
+  activityReport: ActivityReport[];
   recentOrders: Order[];
   error: Nullable<string>;
 }
 
+/**
+ * Get User Report
+ */
+export interface GetUserReportPayload {
+  compareTo: COMPARISON_VALUES;
+}
+export interface GetUserReportResponse extends BaseResponse<UserReport> {}
 /**
  * Get Customer Report
  */
@@ -64,6 +85,14 @@ export interface GetSalesReportPayload {
   type: SALE_VALUES;
 }
 export interface GetSalesReportResponse extends BaseResponse<SaleReport[]> {}
+
+/**
+ * Get Activity Report
+ */
+export interface GetActivityReportPayload {
+  type: ACTIVITY_VALUES;
+}
+export interface GetActivityReportResponse extends BaseResponse<ActivityReport[]> {}
 
 /**
  * Get Recent Orders

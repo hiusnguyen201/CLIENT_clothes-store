@@ -1,13 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
+  getActivityReportService,
   getCustomerReportService,
   getOrderReportService,
   getRecentOrdersService,
   getRevenueReportService,
   getSalesReportService,
   getTopProductVariantsService,
+  getUserReportService,
 } from "@/redux/report/report.service";
 import {
+  GetActivityReportPayload,
+  GetActivityReportResponse,
   GetCustomerReportPayload,
   GetCustomerReportResponse,
   GetOrderReportPayload,
@@ -20,8 +24,23 @@ import {
   GetSalesReportResponse,
   GetTopProductVariantsPayload,
   GetTopProductVariantsResponse,
+  GetUserReportPayload,
+  GetUserReportResponse,
 } from "@/redux/report/report.type";
 import { ThunkApiConfig } from "@/types/thunk-api";
+
+export const getUserReport = createAsyncThunk<GetUserReportResponse, GetUserReportPayload, ThunkApiConfig>(
+  "report/get-user-report",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response: GetUserReportResponse = await getUserReportService(payload);
+      return response;
+    } catch (e: any) {
+      const message: string = e?.response?.data?.message || e.message || e.toString();
+      return rejectWithValue(message);
+    }
+  }
+);
 
 export const getCustomerReport = createAsyncThunk<GetCustomerReportResponse, GetCustomerReportPayload, ThunkApiConfig>(
   "report/get-customer-report",
@@ -75,6 +94,19 @@ export const getTopProductVariants = createAsyncThunk<
     return rejectWithValue(message);
   }
 });
+
+export const getActivityReport = createAsyncThunk<GetActivityReportResponse, GetActivityReportPayload, ThunkApiConfig>(
+  "report/get-activity-report",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response: GetActivityReportResponse = await getActivityReportService(payload);
+      return response;
+    } catch (e: any) {
+      const message: string = e?.response?.data?.message || e.message || e.toString();
+      return rejectWithValue(message);
+    }
+  }
+);
 
 export const getSalesReport = createAsyncThunk<GetSalesReportResponse, GetSalesReportPayload, ThunkApiConfig>(
   "report/get-sales-report",

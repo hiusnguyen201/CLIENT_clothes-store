@@ -1,11 +1,28 @@
 import { PERMISSIONS } from "@/constants/permissions";
-import { Blocks, Gauge, KeyRound, Package, ShoppingCart, UserCog2, Users2 } from "lucide-react";
+import {
+  Blocks,
+  CircleDollarSign,
+  Gauge,
+  KeyRound,
+  MessageCircle,
+  Package,
+  Settings,
+  ShoppingCart,
+  SquareActivity,
+  UserCog2,
+  Users2,
+} from "lucide-react";
 
 const navMainGroupApp = [
   {
     title: "Dashboard",
     url: "/dashboard",
     icon: Gauge,
+  },
+  {
+    title: "Activity",
+    url: "/activity",
+    icon: SquareActivity,
   },
   {
     title: "Categories",
@@ -32,6 +49,11 @@ const navMainGroupApp = [
     permission: PERMISSIONS.READ_ORDERS,
   },
   {
+    title: "Payments",
+    url: "/payments",
+    icon: CircleDollarSign,
+  },
+  {
     title: "Users",
     url: "/users",
     icon: Users2,
@@ -48,6 +70,16 @@ const navMainGroupApp = [
     url: "/permissions",
     icon: KeyRound,
     permission: PERMISSIONS.READ_PERMISSIONS,
+  },
+  {
+    title: "Monitoring",
+    url: "/logs",
+    icon: SquareActivity,
+  },
+  {
+    title: "Settings",
+    url: "/settings",
+    icon: Settings,
   },
 ];
 

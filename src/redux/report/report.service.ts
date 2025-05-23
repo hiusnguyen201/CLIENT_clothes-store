@@ -1,5 +1,7 @@
 import { apiInstance } from "@/redux/api";
 import {
+  GetActivityReportPayload,
+  GetActivityReportResponse,
   GetCustomerReportPayload,
   GetCustomerReportResponse,
   GetOrderReportPayload,
@@ -12,8 +14,14 @@ import {
   GetSalesReportResponse,
   GetTopProductVariantsPayload,
   GetTopProductVariantsResponse,
+  GetUserReportPayload,
+  GetUserReportResponse,
 } from "@/redux/report/report.type";
 import { convertToSearchParams } from "@/utils/object";
+
+export const getUserReportService = async (payload: GetUserReportPayload): Promise<GetUserReportResponse> => {
+  return await apiInstance.get(`/report/users?${convertToSearchParams(payload)}`);
+};
 
 export const getCustomerReportService = async (
   payload: GetCustomerReportPayload
@@ -34,6 +42,13 @@ export const getTopProductVariantsService = async (
 ): Promise<GetTopProductVariantsResponse> => {
   return await apiInstance.get(`/report/products/top-sale?${convertToSearchParams(payload)}`);
 };
+
+export const getActivityReportService = async (
+  payload: GetActivityReportPayload
+): Promise<GetActivityReportResponse> => {
+  return await apiInstance.get(`/report/activity-logs?${convertToSearchParams(payload)}`);
+};
+
 export const getSalesReportService = async (payload: GetSalesReportPayload): Promise<GetSalesReportResponse> => {
   return await apiInstance.get(`/report/sales?${convertToSearchParams(payload)}`);
 };

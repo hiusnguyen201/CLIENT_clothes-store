@@ -1,35 +1,43 @@
 import { ActionReducerMapBuilder, createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
 import {
+  GetActivityReportResponse,
   GetCustomerReportResponse,
   GetOrderReportResponse,
   GetRecentOrdersResponse,
   GetRevenueReportResponse,
   GetSalesReportResponse,
   GetTopProductVariantsResponse,
+  GetUserReportResponse,
   ReportState,
 } from "@/redux/report/report.type";
 import {
+  getActivityReport,
   getCustomerReport,
   getOrderReport,
   getRecentOrders,
   getRevenueReport,
   getSalesReport,
   getTopProductVariants,
+  getUserReport,
 } from "@/redux/report/report.thunk";
 
 const initialState: ReportState = {
   loading: {
+    getUserReport: false,
     getCustomerReport: false,
     getOrderReport: false,
     getRevenueReport: false,
     getSalesReport: false,
+    getActivityReport: false,
     getTopProductVariants: false,
     getRecentOrders: false,
   },
+  userReport: null,
   customerReport: null,
   orderReport: null,
   revenueReport: null,
   salesReport: [],
+  activityReport: [],
   topProductVariants: [],
   recentOrders: [],
   error: null,
@@ -40,6 +48,24 @@ const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder: ActionReducerMapBuilder<ReportState>) => {
+    builder
+      // Get User Report
+      .addCase(getUserReport.pending, (state: Draft<ReportState>) => {
+        state.loading.getUserReport = true;
+        state.error = null;
+      })
+      .addCase(getUserReport.fulfilled, (state: Draft<ReportState>, action: PayloadAction<GetUserReportResponse>) => {
+        const { data } = action.payload;
+        state.loading.getUserReport = false;
+        state.error = null;
+        state.userReport = data;
+      })
+      .addCase(getUserReport.rejected, (state: Draft<ReportState>, action: PayloadAction<any>) => {
+        state.loading.getUserReport = false;
+        state.error = action.payload as string;
+        state.userReport = null;
+      });
+
     builder
       // Get Customer Report
       .addCase(getCustomerReport.pending, (state: Draft<ReportState>) => {
@@ -137,6 +163,27 @@ const userSlice = createSlice({
         state.loading.getSalesReport = false;
         state.error = action.payload as string;
         state.salesReport = [];
+      });
+
+    builder
+      // Get Activity Report
+      .addCase(getActivityReport.pending, (state: Draft<ReportState>) => {
+        state.loading.getActivityReport = true;
+        state.error = null;
+      })
+      .addCase(
+        getActivityReport.fulfilled,
+        (state: Draft<ReportState>, action: PayloadAction<GetActivityReportResponse>) => {
+          const { data } = action.payload;
+          state.loading.getActivityReport = false;
+          state.error = null;
+          state.activityReport = data;
+        }
+      )
+      .addCase(getActivityReport.rejected, (state: Draft<ReportState>, action: PayloadAction<any>) => {
+        state.loading.getActivityReport = false;
+        state.error = action.payload as string;
+        state.activityReport = [];
       });
 
     builder

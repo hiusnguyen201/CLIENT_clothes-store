@@ -7,7 +7,7 @@ import { COMPARISON_VALUES } from "@/types/report";
 import { Users } from "lucide-react";
 import { MetricsCard, MetricsCardSkeleton } from "./MetricsCard";
 
-export function CustomerReportCard({ compareTo }: { compareTo: COMPARISON_VALUES }) {
+export function CustomerReportCard({ compareTo = COMPARISON_VALUES.YESTERDAY }: { compareTo?: COMPARISON_VALUES }) {
   const dispatch = useAppDispatch();
   const { loading, customerReport } = useAppSelector<ReportState>((selector) => selector.report);
 
