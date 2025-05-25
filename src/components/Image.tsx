@@ -50,7 +50,7 @@ function calculateHeight(aspect: "1/1" | "3/4" | "4/3" | "16/9" | "9/16", size: 
   return size * (h / w);
 }
 
-export function Image({ aspect = "1/1", src, alt, size = 64, className, type = "normal" }: ImageProps) {
+export function Image({ aspect = "1/1", src, alt, size = 40, className, type = "normal" }: ImageProps) {
   if (type === "avatar") {
     const firstChar = alt.charAt(0).toUpperCase() || "?";
     const backgroundColor = useMemo(() => getLetterColor(firstChar), [firstChar]);

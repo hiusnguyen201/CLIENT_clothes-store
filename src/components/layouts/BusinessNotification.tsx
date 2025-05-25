@@ -98,7 +98,7 @@ export function BusinessNotification() {
           <div className="max-h-[70vh] overflow-y-auto flex flex-col gap-1">
             {newUserNotifications.length > 0 ? (
               newUserNotifications.map((userNotification) => (
-                <DropdownMenuItem key={userNotification.id}>
+                <DropdownMenuItem key={userNotification.id} onClick={() => setIsOpen(false)}>
                   <NotificationCard userNotification={userNotification} />
                 </DropdownMenuItem>
               ))

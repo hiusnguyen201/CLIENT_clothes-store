@@ -12,6 +12,7 @@ type SearchFormFieldProps = {
   type?: "click" | "change";
   onSearchChange?: (value: string) => void;
   onValueChange?: (value: string) => void;
+  onClick?: () => void;
 };
 
 export function SearchFormField({
@@ -23,6 +24,7 @@ export function SearchFormField({
   disabled = false,
   onSearchChange,
   onValueChange,
+  onClick,
 }: SearchFormFieldProps) {
   const [search, setSearchValue] = useState<string>(value || "");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -67,6 +69,8 @@ export function SearchFormField({
         disabled={disabled}
         type="search"
         name={name}
+        autoComplete="off"
+        onClick={onClick}
         onFocus={() => {
           setIsFocus(true);
         }}
@@ -74,7 +78,7 @@ export function SearchFormField({
           setIsFocus(false);
         }}
         placeholder={placeholder}
-        className="py-[6px] pr-3 pl-0 border-none h-[34px] rounded-none"
+        className="py-[6px] pr-3 pl-0 border-none h-[34px] rounded-none bg-transparent focus:bg-transparent"
         value={search}
         onChange={(e) => {
           if (type === "change") {

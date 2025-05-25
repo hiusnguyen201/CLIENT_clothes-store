@@ -13,9 +13,11 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { usePermission } from "@/hooks/use-permission";
 import { cn } from "@/lib/utils";
+import { useMemo } from "react";
+import { getTypedParams } from "@/utils/object";
 
 export function NavMain({
   label,
@@ -37,6 +39,7 @@ export function NavMain({
   }[];
 }) {
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const can = usePermission();
   const someCan = can(
     items.map((i) => i.permission).filter((p): p is string => !!p),
@@ -49,7 +52,16 @@ export function NavMain({
       {(someCan || somePer) && label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
       <SidebarMenu>
         {items.map((item) => {
-          const active = location.pathname.includes(item.url);
+          const params = getTypedParams(searchParams);
+
+          let path = location.pathname;
+
+          for (const [key, value] of Object.entries(params)) {
+            path = path.replace(new RegExp(`\\b${value}\\b`), `:${key}`);
+          }
+
+          const active = path === item.url;
+
           if (item.permission && !can(item.permission)) {
             return null;
           }

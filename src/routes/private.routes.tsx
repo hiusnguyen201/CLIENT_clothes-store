@@ -33,6 +33,8 @@ import { ImportProductPage } from "@/pages/products/ImportProductPage";
 import { ImportOrderPage } from "@/pages/orders/ImportOrderPage";
 import { ActivityPage } from "@/pages/activity/ActivityPage";
 import { ListPaymentPage } from "@/pages/payments";
+import { ListAuditLogPage } from "@/pages/audit-logs/ListAuditLogPage";
+import { ListMessagePage } from "@/pages/messages/ListMessagePage";
 
 export const privateRoutes: RouteObject[] = [
   {
@@ -181,6 +183,10 @@ export const privateRoutes: RouteObject[] = [
         ),
       },
       {
+        path: "/logs",
+        element: <ListAuditLogPage />,
+      },
+      {
         path: "/payments",
         element: (
           <PermissionGuard permission={PERMISSIONS.READ_PAYMENTS}>
@@ -253,6 +259,7 @@ export const privateRoutes: RouteObject[] = [
         ),
       },
       { path: "/notifications", element: <ListNotificationPage /> },
+      { path: "/messages", element: <ListMessagePage /> },
       { path: "/profile/general", element: <ProfilePage /> },
     ],
   },

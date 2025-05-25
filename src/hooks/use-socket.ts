@@ -1,7 +1,12 @@
 import { io } from "socket.io-client";
+import { useAuth } from "./use-auth";
 
-const socket = io(import.meta.env.VITE_SOCKET_URL, {
-  withCredentials: true,
-});
-
-export const useSocket = () => socket;
+export const useSocket = () => {
+  const { user } = useAuth();
+  return io(import.meta.env.VITE_SOCKET_URL, {
+    query: {
+      userId: user?.id,
+    },
+    withCredentials: true,
+  });
+};
