@@ -17,11 +17,10 @@ import { CHANNELS } from "@/constants/channel";
 import { NotificationCard } from "@/components/NotificationCard";
 import { cn } from "@/lib/utils";
 import { AccountState } from "@/redux/account/account.type";
-import {} from "@/redux/account/account.slice";
 
 export function BusinessNotification() {
   const dispatch = useAppDispatch();
-  const { socket } = useSocketStore();
+  const socket = useSocketStore((state) => state.socket);
   const isMobile = useIsMobile();
   const location = useLocation();
   const { newUserNotifications, totalCount } = useAppSelector<AccountState>((selector) => selector.account);

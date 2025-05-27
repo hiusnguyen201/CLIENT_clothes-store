@@ -1,6 +1,6 @@
 "use client";
 
-import { ACTIVITY_VALUES, ActivityReport } from "@/types/report";
+import { ActivityReport } from "@/types/report";
 import moment from "moment-timezone";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 

@@ -10,7 +10,6 @@ import { useUserTableFilters } from "./UserListTable/useUserTableFilters";
 
 export function ExportListUserExcelButton() {
   const can = usePermission();
-  if (!can(PERMISSIONS.EXPORT_USERS_EXCEL)) return null;
   const { filters } = useUserTableFilters();
 
   const dispatch = useAppDispatch();
@@ -23,6 +22,8 @@ export function ExportListUserExcelButton() {
       toast({ title: error, variant: "destructive" });
     }
   };
+
+  if (!can(PERMISSIONS.EXPORT_USERS_EXCEL)) return null;
 
   return (
     <Button

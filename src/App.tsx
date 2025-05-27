@@ -7,18 +7,21 @@ import { useSocketStore } from "./hooks/socket/use-socket-store";
 import { useEffect } from "react";
 
 function App() {
-  const { isInitialized, user } = useAuth();
-  const { connectSocket } = useSocketStore();
   const location = useLocation();
+  const { isInitialized, user } = useAuth();
+  const { connectSocket, disconnectSocket } = useSocketStore();
+
+  useEffect(() => {
+    if (user?.id) {
+      connectSocket(user.id);
+    } else {
+      disconnectSocket();
+    }
+  }, [user, connectSocket, disconnectSocket]);
 
   if (location.pathname === "/") {
     return <Navigate to={"/dashboard"} replace />;
   }
-
-  useEffect(() => {
-    if (!user) return;
-    connectSocket(user.id);
-  }, [user]);
 
   return (
     <div>
