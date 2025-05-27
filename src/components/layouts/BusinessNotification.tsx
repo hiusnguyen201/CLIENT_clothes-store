@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { getListNewNotificationInUser, markAllAsReadNotificationInUser } from "@/redux/account/account.thunk";
 import { Link, useLocation } from "react-router-dom";
-import { useSocket } from "@/hooks/use-socket";
+import { useSocketStore } from "@/hooks/socket/use-socket-store";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { CHANNELS } from "@/constants/channel";
 import { NotificationCard } from "@/components/NotificationCard";
@@ -21,7 +21,7 @@ import {} from "@/redux/account/account.slice";
 
 export function BusinessNotification() {
   const dispatch = useAppDispatch();
-  const socket = useSocket();
+  const { socket } = useSocketStore();
   const isMobile = useIsMobile();
   const location = useLocation();
   const { newUserNotifications, totalCount } = useAppSelector<AccountState>((selector) => selector.account);
@@ -39,12 +39,14 @@ export function BusinessNotification() {
   };
 
   useEffect(() => {
+    if (!socket) return;
+
     socket.on(CHANNELS.NOTIFICATION_CHANEL, handleGetNotifications);
 
     return () => {
       socket.off(CHANNELS.NOTIFICATION_CHANEL, handleGetNotifications);
     };
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     if (inNotificationPage) return;

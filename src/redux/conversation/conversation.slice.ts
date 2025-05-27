@@ -40,7 +40,10 @@ const auditLogSlice = createSlice({
       state.list.messages.push(action.payload);
     },
     addConversationOneToOne(state: Draft<ConversationState>, action: PayloadAction<ConversationOneToOne>) {
-      state.list.oneToOne.push(action.payload);
+      const exist = state.list.oneToOne.find((item) => item.id === action.payload.id);
+      if (!exist) {
+        state.list.oneToOne.unshift(action.payload);
+      }
     },
     addMessages(state: Draft<ConversationState>, action: PayloadAction<Message[]>) {
       state.list.messages.push(...action.payload);

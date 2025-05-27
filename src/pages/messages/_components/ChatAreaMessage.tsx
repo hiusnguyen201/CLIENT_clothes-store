@@ -2,7 +2,7 @@ import { Image } from "@/components/Image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CHANNELS } from "@/constants/channel";
-import { useSocket } from "@/hooks/use-socket";
+import { useSocketStore } from "@/hooks/socket/use-socket-store";
 import { toast } from "@/hooks/use-toast";
 import { addMessage, updateConversation } from "@/redux/conversation/conversation.slice";
 import { createMessage, getListMessage } from "@/redux/conversation/conversation.thunk";
@@ -21,7 +21,7 @@ type ChatAreaMessageProps = {
 
 export function ChatAreaMessage({ currentConversationId, user }: ChatAreaMessageProps) {
   const dispatch = useAppDispatch();
-  const socket = useSocket();
+  const socket = useSocketStore((state) => state.socket);
   const [messageInput, setMessageInput] = useState("");
   const [pageMessage, setMessage] = useState<number>(1);
   const { list, loading } = useAppSelector<ConversationState>((selector) => selector.conversation);
@@ -37,27 +37,33 @@ export function ChatAreaMessage({ currentConversationId, user }: ChatAreaMessage
   };
 
   useEffect(() => {
-    if (!currentConversationId) return;
+    if (!currentConversationId || !socket) return;
+
     setMessage(1);
     socket.emit(CHANNELS.CONVERSATION_JOIN, currentConversationId);
 
-    socket.on(
-      CHANNELS.MESSAGE_SEND_CHANEL,
-      ({ message, conversationUpdate }: { message: Message; conversationUpdate: ConversationOneToOne }) => {
-        if (currentConversationId === conversationUpdate.id) {
-          dispatch(addMessage(message));
-          dispatch(updateConversation(conversationUpdate));
-        }
+    const onMessageReceive = ({
+      message,
+      conversationUpdate,
+    }: {
+      message: Message;
+      conversationUpdate: ConversationOneToOne;
+    }) => {
+      if (currentConversationId === conversationUpdate.id) {
+        dispatch(addMessage(message));
+        dispatch(updateConversation(conversationUpdate));
       }
-    );
+    };
+
+    socket.on(CHANNELS.MESSAGE_SEND_CHANEL, onMessageReceive);
 
     handleGetListMessage();
 
     return () => {
       socket.emit(CHANNELS.CONVERSATION_LEAVE, currentConversationId);
-      socket.off(CHANNELS.MESSAGE_SEND_CHANEL);
+      socket.off(CHANNELS.MESSAGE_SEND_CHANEL, onMessageReceive);
     };
-  }, [currentConversationId]);
+  }, [currentConversationId, socket]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,6 +92,14 @@ export function ChatAreaMessage({ currentConversationId, user }: ChatAreaMessage
     return [...list.messages].sort((a, b) => moment(a.timestamp).valueOf() - moment(b.timestamp).valueOf());
   }, [list.messages]);
 
+  if (!currentConversationId) {
+    return (
+      <div className="flex items-center justify-center h-full text-gray-500 w-full">
+        <p>Select a conversation to start chatting</p>
+      </div>
+    );
+  }
+
   return (
     <div className="hidden md:flex flex-col flex-1 border rounded-lg">
       {/* Chat Header */}
@@ -112,17 +126,17 @@ export function ChatAreaMessage({ currentConversationId, user }: ChatAreaMessage
             sortedMessages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${message.sender.id !== user.id ? "justify-end" : "justify-start"}`}
+                className={`flex ${message.sender.id === user.id ? "justify-end" : "justify-start"}`}
               >
                 <div
                   className={`max-w-[70%] px-4 py-2 rounded-lg ${
-                    message.sender.id !== user.id
+                    message.sender.id === user.id
                       ? "bg-blue-600 text-white rounded-br-none"
                       : "bg-gray-200 text-gray-800 rounded-bl-none"
                   }`}
                 >
                   <p className="text-sm">{message.content}</p>
-                  <p className={`text-xs mt-1 ${message.sender.id !== user.id ? "text-blue-100" : "text-gray-500"}`}>
+                  <p className={`text-xs mt-1 ${message.sender.id === user.id ? "text-blue-100" : "text-gray-500"}`}>
                     {moment(message.timestamp).format("hh:mm A")}
                   </p>
                 </div>

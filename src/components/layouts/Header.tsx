@@ -20,7 +20,7 @@ export function Header() {
         )}
       >
         <img
-          src={open ? "/public/assets/logo/logo3.svg" : "/public/assets/logo/logo4.svg"}
+          src={open ? "/assets/logo/logo3.svg" : "/assets/logo/logo4.svg"}
           alt="logo"
           className="h-full w-full p-2"
         />

@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { getTypedParams, convertToSearchParams } from "@/utils/object";
 
 export function useSearchFilters<T extends object>({
   initialFilters,
@@ -9,15 +7,10 @@ export function useSearchFilters<T extends object>({
   initialFilters: T;
   onBeforeFiltersChange?: (filters: T) => Record<string, any> | null;
 }) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [filters, setFilters] = useState<T>({
-    ...initialFilters,
-    ...getTypedParams(searchParams),
-  });
+  const [filters, setFilters] = useState<T>(initialFilters);
 
   useEffect(() => {
-    const updatedFilters = onBeforeFiltersChange?.(filters);
-    setSearchParams(convertToSearchParams(updatedFilters ? updatedFilters : filters));
+    onBeforeFiltersChange?.(filters);
   }, [filters]);
 
   const handlePageChange = (page: number) => {

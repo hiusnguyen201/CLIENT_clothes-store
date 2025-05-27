@@ -19,6 +19,7 @@ import { User } from "@/types/user";
 import { ArrowLeft } from "lucide-react";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { useUserSidebarFilters } from "./useUserSidebarFilters";
 
 type SidebarMessageProps = {
   onConversationIdChange: (id: string) => void;
@@ -31,8 +32,8 @@ export function SidebarMessage({ onConversationIdChange, currentConversationId, 
   const { list, loading } = useAppSelector<ConversationState>((selector) => selector.conversation);
   const { list: userList, loading: userLoading } = useAppSelector<UserState>((selector) => selector.user);
   const [pageConversation, setPageConversation] = useState<number>(1);
-  const [pageUser, setPageUser] = useState<number>(1);
   const [tab, setTab] = useState<"conversations" | "search">("conversations");
+  const { filters, handleKeywordChange } = useUserSidebarFilters();
 
   const formatMessageTime = (date: Date) => {
     const messageTime = moment(date);
@@ -46,27 +47,11 @@ export function SidebarMessage({ onConversationIdChange, currentConversationId, 
     }
   };
 
-  const handleGetListConversationOneToOne = async () => {
-    try {
-      const response = await dispatch(getListConversationOneToOne({ page: pageConversation, limit: 15 })).unwrap();
-      onConversationIdChange(response.data.list[0].id);
-    } catch (error: any) {
-      toast({ title: error, variant: "destructive" });
-    }
-  };
-
-  const handleGetListUser = async () => {
-    try {
-      await dispatch(getListUser({ page: pageUser, limit: 15 })).unwrap();
-    } catch (error: any) {
-      toast({ title: error, variant: "destructive" });
-    }
-  };
-
   const handleCreateConversation = async (participantId: string) => {
     try {
       const res = await dispatch(createConversationOneToOne({ participantId })).unwrap();
       const resDetails = await dispatch(getDetailsConversationOneToOne({ conversationId: res.data.id })).unwrap();
+      dispatch(addConversationOneToOne(resDetails.data));
       onConversationIdChange(resDetails.data.id);
       setTab("conversations");
     } catch (error: any) {
@@ -75,13 +60,26 @@ export function SidebarMessage({ onConversationIdChange, currentConversationId, 
   };
 
   useEffect(() => {
-    handleGetListConversationOneToOne();
+    (async () => {
+      try {
+        await dispatch(getListConversationOneToOne({ page: pageConversation, limit: 15 })).unwrap();
+      } catch (error: any) {
+        toast({ title: error, variant: "destructive" });
+      }
+    })();
   }, []);
 
   useEffect(() => {
     if (tab === "conversations") return;
-    handleGetListUser();
-  }, [tab]);
+
+    (async () => {
+      try {
+        await dispatch(getListUser(filters)).unwrap();
+      } catch (error: any) {
+        toast({ title: error, variant: "destructive" });
+      }
+    })();
+  }, [tab, filters]);
 
   return (
     <div className="w-full md:w-80 bg-white flex flex-col">
@@ -101,7 +99,12 @@ export function SidebarMessage({ onConversationIdChange, currentConversationId, 
                 </Button>
               )}
             </div>
-            <SearchFormField name="search" className="rounded-full" onClick={() => setTab("search")} />
+            <SearchFormField
+              name="search"
+              className="rounded-full"
+              onClick={() => setTab("search")}
+              onValueChange={handleKeywordChange}
+            />
           </div>
         </div>
 
